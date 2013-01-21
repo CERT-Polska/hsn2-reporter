@@ -1,0 +1,17 @@
+/etc/init.d/hsn2-reporter
+/etc/hsn2/templates/capture.jsont
+/etc/hsn2/templates/cuckoo.jsont
+/etc/hsn2/templates/file.jsont
+/etc/hsn2/templates/js-sta.jsont
+/etc/hsn2/templates/rb-archiveinflate.jsont
+/etc/hsn2/templates/rb-clamavnugget.jsont
+/etc/hsn2/templates/rb-officecat.jsont
+/etc/hsn2/templates/rb-pdffox.jsont
+/etc/hsn2/templates/rb-swfscanner.jsont
+/etc/hsn2/templates/rb-virustotal.jsont
+/etc/hsn2/templates/shell-scdbg.jsont
+/etc/hsn2/templates/swf-cve.jsont
+/etc/hsn2/templates/thug.jsont
+/etc/hsn2/templates/url.jsont
+/etc/hsn2/templates/webclient.jsont
+/etc/hsn2/templates/yara.jsont

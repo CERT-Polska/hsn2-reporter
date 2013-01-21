@@ -1,0 +1,16 @@
+
+<<.section malicious_keywords>>
+{
+	"structure":"text",
+	"name":"Malicious keywords",
+	"value":"aaa"
+},
+<<.end>>
+
+<<.section suspicious_keywords>>
+{
+	"structure":"text",
+	"name":"Suspicious keywords",
+	"value":"aaa"
+},
+<<.end>>

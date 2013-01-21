@@ -1,0 +1,30 @@
+{
+	"fullObject" : <<@>>
+	"node":<<@|hsn-node-ref>>,	
+	"classification":<<js_classification>>,
+	"details":
+	{
+		<<.section js_sta_results JSContextResults>>
+			{
+				"name":"Context no. <<id|str>>",				
+				"js_classification":<<classification>>				
+				<<.section malicious_keywords>>				
+				"Malicious_keywords":<<@|str>>"
+				<<.end>>
+				<<.section suspicious_keywords>>
+				"Suspicious_keywords":<<@|str>>"				
+				<<.end>>
+			},
+			<<.end>>
+	},
+	{
+		"structure":"boolean",
+		"name":"Malicious keywords found",
+		"value:<<js_malicious_keywords>>
+	},
+	{
+		"structure":"boolean",
+		"name":"Suspicious keywords found",
+		"value:<<js_suspicious_keywords>>
+	}
+}

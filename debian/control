@@ -1,0 +1,9 @@
+Package: hsn2-reporter
+Version: {VER}
+Section: unknown
+Priority: optional
+Architecture: all
+Recommends: couchdb (>= 1.0)
+Maintainer: Pawel Jacewicz <pawel.jacewicz@cert.pl>
+Description: HSN2 Service Reporter
+Distribution: {DEBIAN_DIST}
