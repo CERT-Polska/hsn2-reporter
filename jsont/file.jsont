@@ -1,0 +1,31 @@
+{
+  "type":"file",
+  "job":<<@|hsn-job-id>>,
+  "state":"complete",
+  <<.section classification>>
+  "classification":<<@>>,
+  <<.or>>
+  "classification":"unknown",
+  <<.end>>
+  <<.section sha1>>
+  "sha1":<<@>>,
+  <<.end>>
+  <<.section ssdeep>>
+  "ssdeep":<<@>>,
+  <<.end>>
+  <<.section origin>>
+  "origin":<<@>>,
+  <<.end>>
+  "alerts":[], <<# TODO (not well-defined yet)>>
+  <<.section parent>>
+  "parent":<<@|hsn-node-ref>>,
+  <<.end>>
+  <<.section redirect_ancestor>>
+  "redirect_ancestor":<<@|hsn-node-ref>>,
+  <<.end>>
+  "top_ancestor":<<top_ancestor|hsn-node-ref>>,
+  <<.section duplicate>>
+  "duplicate":<<@|hsn-node-ref>>,
+  <<.end>>
+}
+

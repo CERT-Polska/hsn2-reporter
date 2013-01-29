@@ -1,0 +1,364 @@
+{
+  "type":"analysis",
+  "job":<<@|hsn-job-id>>,
+  "service":"webclient",
+  "node":<<@|hsn-node-ref>>,
+  "details":
+  {
+    "structure":"list",
+    "name":"Interaction with the web page",
+    "value":
+    [
+      <<.section http_request Request>>
+      {
+        "structure":"list",
+        "name":"Request",
+        "value":
+        [
+          {
+            "structure":"text",
+            "name":"URL",
+            "value":<<request_url_original>>
+          }
+          <<.section response_code>>
+          ,{
+            "structure":"integer",
+            "name":"HTTP status",
+            "value":<<response_code>>
+          }
+          <<.end>>
+        ]
+      },
+      <<.end>>
+      {
+        "structure":"list",
+        "name":"Embedded images",
+        "value":
+        [
+        <<.section image_list FileList>>
+        <<.repeated section files>>
+          {
+            "structure":"list",
+            "name":"File",
+            "value":
+            [
+              {
+                "structure":"list",
+                "name":"Chain of requests",
+                "value":
+                [
+                <<.repeated section requests>>
+                  {
+                    "structure":"list",
+                    "name":"Request",
+                    "value":
+                    [
+                      {
+                        "structure":"text",
+                        "name":"URL",
+                        "value":<<request_url_original>>
+                      }
+                      <<.section response_code>>
+                      ,{
+                        "structure":"integer",
+                        "name":"HTTP status",
+                        "value":<<response_code>>
+                      }
+                      <<.end>>
+                    ]
+                  }
+                <<.alternates with>>,
+                <<.end>>
+                ]
+              }, <<# end of chain of requests>>
+              {
+                "structure":"text",
+                "name":"Type",
+                "value":<<type>>
+              },
+              {
+                "structure":"attachment",
+                "name":"Content",
+                "value":<<content|hsn-attachment>>
+              }
+            ]
+          }
+		<<.alternates with>>,
+        <<.end>>
+        <<.end>>
+        ]
+      }, <<# end of embedded files>>
+      {
+        "structure":"list",
+        "name":"Embedded objects",
+        "value":
+        [
+        <<.section object_list FileList>>
+        <<.repeated section files>>
+          {
+            "structure":"list",
+            "name":"File",
+            "value":
+            [
+              {
+                "structure":"list",
+                "name":"Chain of requests",
+                "value":
+                [
+                <<.repeated section requests>>
+                  {
+                    "structure":"list",
+                    "name":"Request",
+                    "value":
+                    [
+                      {
+                        "structure":"text",
+                        "name":"URL",
+                        "value":<<request_url_original>>
+                      }
+                      <<.section response_code>>
+                      ,{
+                        "structure":"integer",
+                        "name":"HTTP status",
+                        "value":<<response_code>>
+                      }
+                      <<.end>>
+                    ]
+                  }
+                <<.alternates with>>,
+                <<.end>>
+                ]
+              }, <<# end of chain of requests>>
+              {
+                "structure":"text",
+                "name":"Type",
+                "value":<<type>>
+              },
+              {
+                "structure":"attachment",
+                "name":"Content",
+                "value":<<content|hsn-attachment>>
+              }
+            ]
+          }
+		<<.alternates with>>,
+        <<.end>>
+        <<.end>>
+        ]
+      }, <<# end of embedded files>>
+      {
+        "structure":"list",
+        "name":"Embedded multimedia",
+        "value":
+        [
+        <<.section multimedia_list FileList>>
+        <<.repeated section files>>
+          {
+            "structure":"list",
+            "name":"File",
+            "value":
+            [
+              {
+                "structure":"list",
+                "name":"Chain of requests",
+                "value":
+                [
+                <<.repeated section requests>>
+                  {
+                    "structure":"list",
+                    "name":"Request",
+                    "value":
+                    [
+                      {
+                        "structure":"text",
+                        "name":"URL",
+                        "value":<<request_url_original>>
+                      }
+                      <<.section response_code>>
+                      ,{
+                        "structure":"integer",
+                        "name":"HTTP status",
+                        "value":<<response_code>>
+                      }
+                      <<.end>>
+                    ]
+                  }
+                <<.alternates with>>,
+                <<.end>>
+                ]
+              }, <<# end of chain of requests>>
+              {
+                "structure":"text",
+                "name":"Type",
+                "value":<<type>>
+              },
+              {
+                "structure":"attachment",
+                "name":"Content",
+                "value":<<content|hsn-attachment>>
+              }
+            ]
+          }
+		<<.alternates with>>,
+        <<.end>>
+        <<.end>>
+        ]
+      }, <<# end of embedded files>>
+      {
+        "structure":"list",
+        "name":"Other embedded files",
+        "value":
+        [
+        <<.section other_list FileList>>
+        <<.repeated section files>>
+          {
+            "structure":"list",
+            "name":"File",
+            "value":
+            [
+              {
+                "structure":"list",
+                "name":"Chain of requests",
+                "value":
+                [
+                <<.repeated section requests>>
+                  {
+                    "structure":"list",
+                    "name":"Request",
+                    "value":
+                    [
+                      {
+                        "structure":"text",
+                        "name":"URL",
+                        "value":<<request_url_original>>
+                      }
+                      <<.section response_code>>
+                      ,{
+                        "structure":"integer",
+                        "name":"HTTP status",
+                        "value":<<response_code>>
+                      }
+                      <<.end>>
+                    ]
+                  }
+                <<.alternates with>>,
+                <<.end>>
+                ]
+              }, <<# end of chain of requests>>
+              {
+                "structure":"text",
+                "name":"Type",
+                "value":<<type>>
+              },
+              {
+                "structure":"attachment",
+                "name":"Content",
+                "value":<<content|hsn-attachment>>
+              }
+            ]
+          }
+		<<.alternates with>>,
+        <<.end>>
+        <<.end>>
+        ]
+      }, <<# end of embedded files>>
+      {
+        "structure":"list",
+        "name":"Failed requests",
+        "value":
+        [
+        <<.section failed_list FailedList>>
+        <<.repeated section failed>>
+          {
+            "structure":"list",
+            "name":"Download attempt",
+            "value":
+            [
+              {
+                "structure":"list",
+                "name":"Chain of requests",
+                "value":
+                [
+                <<.repeated section requests>>
+                  {
+                    "structure":"list",
+                    "name":"Request",
+                    "value":
+                    [
+                      {
+                        "structure":"text",
+                        "name":"URL",
+                        "value":<<request_url_original>>
+                      }
+                      <<.section response_code>>
+                      ,{
+                        "structure":"integer",
+                        "name":"HTTP status",
+                        "value":<<response_code>>
+                      }
+                      <<.or>>
+                      ,{
+                        "structure":"text",
+                        "name":"HTTP status",
+                        "value":"none"
+                      }
+                      <<.end>>
+                    ]
+                  }
+                <<.alternates with>>,
+                <<.end>>
+                ]
+              }<<# end of chain of requests>>
+              ,{
+                "structure":"text",
+                "name":"Reason",
+                "value":<<reason>>
+              }
+            ]
+          }
+        <<.alternates with>>,
+        <<.end>>
+        <<.end>>
+        ]
+      } <<# end of failed requests>>
+      <<.section html>>
+      ,{
+        "structure":"boolean",
+        "name":"HTML downloaded",
+        "value":<<@>>
+      }
+      <<.end>>
+      <<.section html_source>>
+      ,{
+        "structure":"attachment",
+        "name":"HTML source",
+        "value":<<@|hsn-attachment>>
+      }
+      <<.end>>
+      <<.section reason_failed>>
+      ,{
+        "structure":"text",
+        "name":"Error",
+        "value":<<@>>
+      }
+      <<.end>>
+      ,{
+        "structure":"list",
+        "name":"js_contexts",
+        "value":
+        [
+          <<.section js_context_list JSContextList>>
+          <<.repeated section contexts>>
+          {
+            "structure":"text",
+            "name":"context <<id|str>>",
+            "value":<<source|js-string>>
+          }
+          <<.alternates with>>,
+          <<.end>>
+          <<.end>> 
+        ]
+      }
+    ]
+  }
+}

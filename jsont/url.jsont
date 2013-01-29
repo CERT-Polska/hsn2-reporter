@@ -1,0 +1,35 @@
+{
+  "type":"url",
+  "job":<<@|hsn-job-id>>,
+  "state":"complete",
+  <<.section classification>>
+  "classification":<<@>>,
+  <<.or>>
+  "classification":"unknown",
+  <<.end>>
+  <<.section url_original>>
+  "url_original":<<@>>,
+  <<.end>>
+  <<.section url_normalized>>
+  "url_normalized":<<@>>,
+  <<.end>>
+  "visit_time":0, <<# TODO (no service support)>>
+  <<.section origin>>
+  "origin":<<@>>,
+  <<.end>>
+  "alerts":[], <<# TODO (not well-defined yet)>>
+  "ip_list":[], <<# TODO (no service support)>>
+  "ip_visited":"0.0.0.0", <<# TODO (no service support)>>
+  <<.section parent>>
+  "parent":<<@|hsn-node-ref>>,
+  <<.end>>
+  <<.section redirect_ancestor>>
+  "redirect_ancestor":<<@|hsn-node-ref>>,
+  <<.end>>
+  "top_ancestor":<<top_ancestor|hsn-node-ref>>,
+  "files":<<@|hsn-related-files>>,
+  <<.section duplicate>>
+  "duplicate":<<@|hsn-node-ref>>,
+  <<.end>>
+}
+
