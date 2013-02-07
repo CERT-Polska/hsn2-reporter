@@ -20,11 +20,15 @@
 package pl.nask.hsn2.service;
 
 import java.io.IOException;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import jsontemplate.HsnFormatters;
 
+import org.apache.commons.daemon.Daemon;
+import org.apache.commons.daemon.DaemonContext;
+import org.apache.commons.daemon.DaemonController;
+import org.apache.commons.daemon.DaemonInitException;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.CouchDbException;
 import org.slf4j.Logger;
@@ -36,38 +40,34 @@ import pl.nask.hsn2.connector.AMQP.ObjectStoreConnectorImpl;
 import pl.nask.hsn2.connector.REST.DataStoreConnector;
 import pl.nask.hsn2.connector.REST.DataStoreConnectorImpl;
 
-public final class ReporterService {
+public final class ReporterService implements Daemon {
 
 	private final static Logger LOG = LoggerFactory.getLogger(ReporterService.class);
 
-	public static void main(String[] args) throws InterruptedException {
-		ReporterCommandLineParams cmd = parseArguments(args);
-
-		CouchDbClient couchDbClient = null;
-		try {
-			couchDbClient = prepareCouchDbClient(cmd.getDatabaseAddress());
-		} catch (IOException e) {
-			LOG.error("Shutting down {} service",cmd.getServiceName());
-			System.exit(1);
-		} finally {
-			if (couchDbClient != null) {
-				couchDbClient.shutdown();
-				couchDbClient = null;
+	private ReporterCommandLineParams cmd = null;
+	private Thread serviceRunner = null;
+	
+	public static void main(final String[] args) throws DaemonInitException, Exception {
+		ReporterService rs = new ReporterService();
+		rs.init(new DaemonContext() {
+			
+			@Override
+			public DaemonController getController() {
+				// TODO Auto-generated method stub
+				return null;
 			}
-		}
-
-		TemplateRegistry templateRegistry = new CachingTemplateRegistry(cmd.getUseCacheForTemplates(), cmd.getJsontPath());
-		JsonRenderer jsonRenderer = new JsonRendererImpl(templateRegistry);
-
-		DataStoreConnector dsConnector = new DataStoreConnectorImpl(cmd.getFormattedDataStoreAddress());
-
-		connectAndSetObjectStoreConnectorInFormatters(cmd);
-
-
-		GenericService service = new GenericService(new ReporterTaskFactory(jsonRenderer, dsConnector, cmd.getDatabaseAddress()), cmd.getMaxThreads(), cmd.getRbtCommonExchangeName());
-		cmd.applyArguments(service);
-
-		service.run();
+			
+			@Override
+			public String[] getArguments() {
+				return args;
+			}
+		});
+		rs.start();
+		rs.serviceRunner.join();
+		rs.stop();
+		rs.destroy();
+		
+		
 	}
 
 	public static CouchDbClient prepareCouchDbClient(String hostname) throws IOException {
@@ -96,5 +96,80 @@ public final class ReporterService {
 		params.parseParams(args);
 
 		return params;
+	}
+
+	
+
+	@Override
+	public void init(DaemonContext context) throws DaemonInitException,	Exception {
+		 this.cmd  = parseArguments(context.getArguments());
+
+		CouchDbClient couchDbClient = null;
+		try {
+			couchDbClient = prepareCouchDbClient(cmd.getDatabaseAddress());
+			LOG.debug("CouchDB connect test - OK.");
+		} catch (IOException e) {
+			LOG.error("Shutting down {} service.Error connecting CouchDB",cmd.getServiceName());
+//			System.exit(1);
+			throw e;
+		} finally {
+			if (couchDbClient != null) {
+				couchDbClient.shutdown();
+				couchDbClient = null;
+			}
+		}
+
+		
+	}
+
+	@Override
+	public void start() throws Exception {
+		TemplateRegistry templateRegistry = new CachingTemplateRegistry(cmd.getUseCacheForTemplates(), cmd.getJsontPath());
+		JsonRenderer jsonRenderer = new JsonRendererImpl(templateRegistry);
+
+		DataStoreConnector dsConnector = new DataStoreConnectorImpl(cmd.getFormattedDataStoreAddress());
+
+		connectAndSetObjectStoreConnectorInFormatters(cmd);
+
+
+		final GenericService service = new GenericService(new ReporterTaskFactory(jsonRenderer, dsConnector, cmd.getDatabaseAddress()), cmd.getMaxThreads(), cmd.getRbtCommonExchangeName());
+		cmd.applyArguments(service);
+		serviceRunner = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+					
+					@Override
+					public void uncaughtException(Thread t, Throwable e) {
+						System.exit(1);
+					}
+				});
+				try {
+					service.run();
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+					throw new RuntimeException(e);
+				}
+				
+			}
+		},"Reporter-Service");
+		serviceRunner.start();
+		
+		
+		
+	}
+
+	@Override
+	public void stop() throws InterruptedException {
+		serviceRunner.interrupt();
+		serviceRunner.join(10000);
+		
+	}
+
+	@Override
+	public void destroy() {
+		// TODO Auto-generated method stub
+		
 	}
 }
