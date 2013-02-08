@@ -1,4 +1,9 @@
+# Eclipse files
 /.classpath
 /.project
 /.settings/*
 /target/
+
+# Editor swap files
+*~
+*.swp

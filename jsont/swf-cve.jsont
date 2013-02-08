@@ -1,0 +1,28 @@
+{
+  "type":"analysis",
+  "job":<<@|hsn-job-id>>,
+  "service":"swf-cve",
+  "node":<<@|hsn-node-ref>>,
+  <<.section swf_cve_list>>
+  "classification":"malicious",
+  <<.or>>
+  "classification":"benign",
+  <<.end>>
+  "details":
+  {
+    <<.section swf_cve_list CveList>>
+    "structure":"list",
+    "name":"List of CVEs",
+    "value":
+    [
+      <<.repeated section cve>>
+      {
+        "structure":"text",
+        "name":"CVE",
+        "value":<<@|js-string>>
+      }
+      <<.end>>
+    ]
+    <<.end>>
+  }
+}

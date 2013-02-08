@@ -1,0 +1,64 @@
+{
+  "type":"analysis",
+  "job":<<@|hsn-job-id>>,
+  "service":"js-sta",
+  "node":<<@|hsn-node-ref>>,
+  "classification":<<js_classification>>,
+  "details":
+  {
+    "structure":"list",
+    "name":"Analysis details",
+    "value":
+    [
+      {
+        "structure":"list",
+        "name":"Individual contexts",
+        "value":
+        [
+        <<.section js_sta_results JSStaticResults>>
+        <<.repeated section results>>
+          {
+            "structure":"list",
+            "name":"Context no. <<id|str>>",
+            "value":
+            [
+              {
+                "structure":"text",
+                "name":"classification",
+                "value":<<classification>>
+              }
+              <<.section malicious_keywords>>
+              ,{
+                "structure":"text",
+                "name":"Malicious keywords",
+                "value":<<@|js-string>>
+              }
+              <<.end>>
+              <<.section suspicious_keywords>>
+              ,{
+                "structure":"text",
+                "name":"Suspicious keywords",
+                "value":<<@|js-string>>
+              }
+              <<.end>>
+            ]
+          }
+        <<.alternates with>>,
+        <<.end>>
+        <<.end>>
+        ]
+      },
+      {
+        "structure":"boolean",
+        "name":"Malicious keywords found",
+        "value":<<js_malicious_keywords>>
+      },
+      {
+        "structure":"boolean",
+        "name":"Suspicious keywords found",
+        "value":<<js_suspicious_keywords>>
+      }
+    ]
+  }
+}
+

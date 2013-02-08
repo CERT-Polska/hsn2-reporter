@@ -1,0 +1,68 @@
+{
+  "type":"analysis",
+  "job":<<@|hsn-job-id>>,
+  "service":"rb-virustotal",
+  "node":<<@|hsn-node-ref>>,
+  <<.section rb_virustotal_classification>>
+    "classification":<<@>>,
+  <<.end>>
+  <<.section type>>
+    "filetype":<<@>>,
+  <<.end>>
+  <<.section content>>
+    "content":{
+      "structure":"attachment",
+      "name":"Content",
+      "value":<<@|hsn-attachment>>
+    },
+  <<.end>>
+  "details":
+  {
+    "structure":"list",
+    "name":"Analysis details",
+    "value":
+    [
+      <<.section rb_virustotal_verdict_message>> { 
+        "structure":"text",
+        "name":"message",
+        "value":<<@|js-string>>
+      }, <<.end>>
+      <<.section rb_virustotal_verdict_priority>> { 
+        "structure":"text",
+        "name":"priority",
+        "value":<<@|js-string>>
+      }, <<.end>>
+      <<.section filename>> { 
+        "structure":"text",
+        "name":"filename",
+        "value":<<@|js-string>>
+      }, <<.end>>
+      <<.section sha256>> { 
+        "structure":"text",
+        "name":"sha256",
+        "value":<<@|js-string>>
+      }, <<.end>>
+      <<.section size>>
+      {
+        "structure":"text",
+        "name":"size",
+        "value":<<@|js-string>>
+      },
+      <<.end>>
+      <<.section rb_virustotal_report>>
+      {
+        "structure":"text",
+        "name":"report",
+        "value":<<@|js-string>>
+      },
+      <<.end>>
+      <<.section rb_virustotal_return_value>>
+      {
+        "structure":"text",
+        "name":"return value",
+        "value":<<@|js-string>>
+      },
+      <<.end>>
+    ]
+  }
+}

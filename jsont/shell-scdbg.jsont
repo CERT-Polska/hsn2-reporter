@@ -1,0 +1,56 @@
+{
+  "type":"analysis",
+  "job":<<@|hsn-job-id>>,
+  "service":"shell-scdbg",
+  "node":<<@|hsn-node-ref>>,
+  <<.section scdbg_results>>
+  "classification":"malicious",
+  <<.or>>
+  "classification":"benign",
+  <<.end>>
+  "details":
+  {
+    <<.section scdbg_results ScdbgResultList>>
+    "structure":"list",
+    "name":"",
+    "value":
+    [
+      <<.repeated section results>>
+      {
+        "structure":"list",
+        "name":"Offset analysis",
+        "value":
+        [
+          {
+            "structure":"integer",
+            "name":"Offset",
+            "value":<<offset>>
+          },
+          <<.section output>>
+          {
+            "structure":"text",
+            "name":"CVE",
+            "value":<<@|js-string>>
+          },
+          <<.end>>
+          <<.section dump>>
+          {
+            "structure":"attachment",
+            "name":"Modified memory dump",
+            "value":<<@|hsn-attachment>>
+          },
+          <<.end>>
+          <<.section graph>>
+          {
+            "structure":"attachment",
+            "name":"Call graph",
+            "value":<<@|hsn-attachment>>
+          }
+          <<.end>>
+        ]
+      },
+      <<.end>>
+    ]
+    <<.end>>
+  }
+}

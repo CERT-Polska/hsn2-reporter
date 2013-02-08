@@ -1,0 +1,43 @@
+{
+  "type":"analysis",
+  "job":<<@|hsn-job-id>>,
+  "service":"yara",
+  "node":<<@|hsn-node-ref>>,
+  "details":
+  {
+    "structure":"list",
+    "name":"Analysis details",
+    "value":
+    [
+      {
+        "structure":"boolean",
+        "name":"YARA found matches",
+        "value":<<yara_matches_found>>
+      },
+      {
+        "structure":"integer",
+        "name":"Processing started",
+        "value":<<yara_time_start>>
+      },
+      {
+        "structure":"integer",
+        "name":"Processing finished",
+        "value":<<yara_time_stop>>
+      },
+      <<.section yara_matches_list YaraMatchesList>>
+      {
+        "structure":"list",
+        "name":"Matches",
+        "value": [
+      <<.repeated section matches>>
+		  {
+			"structure":"string",
+			"name":"Match Rule",
+			"value":<<rule|str>>
+		  },
+     <<.end>>
+                ]}
+     <<.end>>
+    ]
+  }
+}

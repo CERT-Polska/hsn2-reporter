@@ -1,0 +1,87 @@
+{
+  "type":"analysis",
+  "job":<<@|hsn-job-id>>,
+  "service":"capture",
+  "node":<<@|hsn-node-ref>>,
+  "classification":<<hpc_classification>>,
+  "details":
+  {
+    "structure":"list",
+    "name":"Analysis details of Capture HPC Service",
+    "value":
+    [
+      {
+        "structure":"boolean",
+        "name":"Proccessed URL successfully",
+        "value":<<hpc_active>>
+      },
+      <<.section hpc_reason_failed>>
+      {
+        "structure":"text",
+        "name":"Reason for processing failure",
+        "value":<<@>>
+      },
+      <<.end>>
+      <<.section hpc_crash_report>>
+      {
+        "structure":"text",
+        "name":"Crash report",
+        "value":<<@>>
+      },
+      <<.end>>
+      {
+        "structure":"integer",
+        "name":"Processing started",
+        "value":<<hpc_time_start>>
+      },
+      {
+        "structure":"integer",
+        "name":"Processing finished",
+        "value":<<hpc_time_stop>>
+      },
+      <<.section hpc_pcap>>
+      {
+        "structure":"attachment",
+        "name":"PCAP file",
+        "value":<<@|hsn-attachment>>
+      },
+      <<.end>>
+      <<.section hpc_log_file>>
+      {
+        "structure":"attachment",
+        "name":"Log file",
+        "value":<<@|hsn-attachment>>
+      },
+      <<.end>>
+      <<.section hpc_zip_file>>
+      {
+        "structure":"attachment",
+        "name":"Zip file",
+        "value":<<@|hsn-attachment>>
+      },
+      <<.end>>
+      <<.section hpc_log_file2>>
+      {
+        "structure":"attachment",
+        "name":"Log file 2",
+        "value":<<@|hsn-attachment>>
+      },
+      <<.end>>
+      <<.section hpc_zip_file2>>
+      {
+        "structure":"attachment",
+        "name":"Zip file 2",
+        "value":<<@|hsn-attachment>>
+      },
+      <<.end>>
+      <<.section hpc_screenshot>>
+      {
+        "structure":"attachment",
+        "name":"Screenshot",
+        "value":<<@|hsn-attachment>>
+      },
+      <<.end>>
+    ]
+  }
+}
+

@@ -1,0 +1,65 @@
+{
+  "type":"analysis",
+  "job":<<@|hsn-job-id>>,
+  "service":"cuckoo",
+  "node":<<@|hsn-node-ref>>,
+  <<.section cuckoo_classification>>
+  "classification":<<@|string>>,
+  <<.or>>
+  "classification":"unknown",
+  <<.end>>
+  "details":
+  {
+    "structure":"list",
+    "name":"Analysis details of Cuckoo Service",
+    "value":
+    [
+      {
+        "structure":"integer",
+        "name":"Processing started",
+        "value":<<cuckoo_time_start>>
+      },
+      {
+        "structure":"integer",
+        "name":"Processing finished",
+        "value":<<cuckoo_time_stop>>
+      },
+      <<.section cuckoo_pcap>>
+      {
+        "structure":"attachment",
+        "name":"PCAP file",
+        "value":<<@|hsn-attachment>>
+      },
+      <<.end>>
+      <<.section cuckoo_report_html>>
+      {
+        "structure":"attachment",
+        "name":"HTML Report",
+        "value":<<@|hsn-attachment>>
+      },
+      <<.end>>
+      <<.section cuckoo_report_json>>
+      {
+        "structure":"attachment",
+        "name":"JSON report",
+        "value":<<@|hsn-attachment>>
+      },
+      <<.end>>
+      <<.section cuckoo_screenshots>>
+      {
+        "structure":"attachment",
+        "name":"Screenshots from Cuckoo",
+        "value":<<@|hsn-attachment>>
+      },
+      <<.end>>
+      <<.section cuckoo_classification_reason>>
+      {
+        "structure":"string",
+        "name":"Reason for classification",
+        "value":<<@|js-string>>
+      },
+      <<.end>>
+    ]
+  }
+}
+
