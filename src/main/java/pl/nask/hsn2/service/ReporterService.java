@@ -66,8 +66,6 @@ public final class ReporterService implements Daemon {
 		rs.serviceRunner.join();
 		rs.stop();
 		rs.destroy();
-		
-		
 	}
 
 	public static CouchDbClient prepareCouchDbClient(String hostname) throws IOException {
@@ -132,7 +130,7 @@ public final class ReporterService implements Daemon {
 		connectAndSetObjectStoreConnectorInFormatters(cmd);
 
 
-		final GenericService service = new GenericService(new ReporterTaskFactory(jsonRenderer, dsConnector, cmd.getDatabaseAddress()), cmd.getMaxThreads(), cmd.getRbtCommonExchangeName());
+		final GenericService service = new GenericService(new ReporterTaskFactory(jsonRenderer, dsConnector, cmd.getDatabaseAddress()), cmd.getMaxThreads(), cmd.getRbtCommonExchangeName(), cmd.getRbtNotifyExchangeName());
 		cmd.applyArguments(service);
 		serviceRunner = new Thread(new Runnable() {
 			
