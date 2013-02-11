@@ -64,7 +64,7 @@ public final class ReporterService {
 		connectAndSetObjectStoreConnectorInFormatters(cmd);
 
 
-		GenericService service = new GenericService(new ReporterTaskFactory(jsonRenderer, dsConnector, cmd.getDatabaseAddress()), cmd.getMaxThreads(), cmd.getRbtCommonExchangeName());
+		GenericService service = new GenericService(new ReporterTaskFactory(jsonRenderer, dsConnector, cmd.getDatabaseAddress()), cmd.getMaxThreads(), cmd.getRbtCommonExchangeName(), cmd.getRbtNotifyExchangeName());
 		cmd.applyArguments(service);
 
 		service.run();
