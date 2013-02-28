@@ -33,7 +33,7 @@ import pl.nask.hsn2.task.Task;
 import pl.nask.hsn2.wrappers.ObjectDataReportingWrapper;
 
 public class ReporterTask implements Task {
-	private final static Logger LOG = LoggerFactory.getLogger(ReporterTask.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ReporterTask.class);
 	private final String templateName;
 	private final JsonRenderer jsonRenderer;
 	private final CouchDbConnector couchDbConnector;

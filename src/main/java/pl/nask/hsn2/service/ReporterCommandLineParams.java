@@ -22,9 +22,9 @@ package pl.nask.hsn2.service;
 import pl.nask.hsn2.CommandLineParams;
 
 public class ReporterCommandLineParams extends CommandLineParams {
-    private static final OptionNameWrapper COUCH_DB_ADDRESS= new OptionNameWrapper("dbAddr", "databaseAddress");
-    private static final OptionNameWrapper USE_TEMPLATES_CACHE= new OptionNameWrapper("tCache", "useTemplatesCache");
-    private static final OptionNameWrapper JSONT_PATH= new OptionNameWrapper("jsontPath", "jsonTemplatesPath");
+	private static final OptionNameWrapper COUCH_DB_ADDRESS = new OptionNameWrapper("dbAddr", "databaseAddress");
+	private static final OptionNameWrapper USE_TEMPLATES_CACHE = new OptionNameWrapper("tCache", "useTemplatesCache");
+	private static final OptionNameWrapper JSONT_PATH = new OptionNameWrapper("jsontPath", "jsonTemplatesPath");
 
     @Override
     public void initOptions() {

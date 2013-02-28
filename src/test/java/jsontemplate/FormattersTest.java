@@ -34,45 +34,65 @@ import org.testng.annotations.Test;
 import pl.nask.hsn2.jsontemplate.formatters.JsonAttachment;
 import pl.nask.hsn2.wrappers.WrapperUtils;
 
+/**
+ * Formatters test.
+ */
 public class FormattersTest {
+	/**
+	 * Test with JSON formatter.
+	 * 
+	 * @throws IOException
+	 *             Exception.
+	 */
+	@Test
+	public final void doTestWithJsonFormatter() throws IOException {
+		String strTemplate = "\"jsonMsg\": <<value|json>>";
 
-    @Test
-    public void doTestWithJsonFormatter() throws IOException {
-        String strTemplate = "\"jsonMsg\": <<value|json>>";
+		Template t = createTemplate(strTemplate, new ArrayList<JsonAttachment>());
 
-        Template t = createTemplate(strTemplate, new ArrayList<JsonAttachment>());
+		Map<String, String> object = new HashMap<String, String>();
+		object.put("value", "value");
+		String res = t.expand(object);
 
-        Map<String, String> object = new HashMap<String, String>();
-        object.put("value", "value");
-        String res = t.expand(object);
+		Assert.assertEquals("\"jsonMsg\": \"value\"", res);
+	}
 
-        Assert.assertEquals("\"jsonMsg\": \"value\"", res);
-    }
+	/**
+	 * Test wrapper with JSON formatter.
+	 * 
+	 * @throws Exception
+	 *             Exception.
+	 */
+	@Test
+	public final void doTestWrapperWithJsonFormatter() throws Exception {
+		String strTemplate = loadTemplate("template-js-sta");
+		Template t = createTemplate(strTemplate, new ArrayList<JsonAttachment>());
+		Object wrappedMsg = WrapperUtils.prepareWrapper(WrapperUtils.prepareTestMsg());
 
-    @Test
-    public void doTestWrapperWithJsonFormatter() throws Exception {
-        String strTemplate = loadTemplate("template-js-sta");
-        Template t = createTemplate(strTemplate, new ArrayList<JsonAttachment>());
-        Object wrappedMsg = WrapperUtils.prepareWrapper(WrapperUtils.prepareTestMsg());
+		String res = t.expand(wrappedMsg);
 
-        String res = t.expand(wrappedMsg);
+		System.out.println(res);
+	}
 
-        System.out.println(res);
-    }
+	/**
+	 * Test wrapper with HSN attachment.
+	 * 
+	 * @throws Exception
+	 *             Exception.
+	 */
+	@Test
+	public final void doTestWrapperWithHsnAttachment() throws Exception {
+		String strTemplate = "\"file\": <<js_sta_results|hsn-attachment>>";
+		ArrayList<JsonAttachment> attachments = new ArrayList<JsonAttachment>();
+		Template t = createTemplate(strTemplate, attachments);
+		Object wrappedMsg = WrapperUtils.prepareWrapper(WrapperUtils.prepareTestMsg());
 
-    @Test
-    public void doTestWrapperWithHsnAttachment() throws Exception {
-        String strTemplate = "\"file\": <<js_sta_results|hsn-attachment>>";
-        ArrayList<JsonAttachment> attachments = new ArrayList<JsonAttachment>();
-        Template t = createTemplate(strTemplate, attachments);
-        Object wrappedMsg = WrapperUtils.prepareWrapper(WrapperUtils.prepareTestMsg());
+		String res = t.expand(wrappedMsg);
+		Assert.assertEquals(1, attachments.size());
+		JsonAttachment att = attachments.get(0);
+		Assert.assertEquals("1:0:1", att.getName());
+		Assert.assertEquals("\"file\": \"1:0:1\"", res);
 
-        String res = t.expand(wrappedMsg);
-        Assert.assertEquals(1, attachments.size());
-        JsonAttachment att = attachments.get(0);
-        Assert.assertEquals("1:0:1", att.getName());
-        Assert.assertEquals("\"file\": \"1:0:1\"", res);
-
-        System.out.println(res);
-    }
+		System.out.println(res);
+	}
 }

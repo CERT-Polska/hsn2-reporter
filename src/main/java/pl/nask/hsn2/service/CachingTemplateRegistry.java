@@ -38,17 +38,13 @@ import org.slf4j.LoggerFactory;
 import pl.nask.hsn2.ResourceException;
 
 /**
- * Provides a thread save registry of json templates. A template would be loaded on demand, which would allow the service to be provided with new templates without being stopped.
- *
- *
+ * Provides a thread save registry of json templates. A template would be loaded on demand, which would allow the
+ * service to be provided with new templates without being stopped.
  */
 public class CachingTemplateRegistry implements TemplateRegistry {
-    private final static Logger LOG = LoggerFactory.getLogger(CachingTemplateRegistry.class);
-
+    private static final Logger LOG = LoggerFactory.getLogger(CachingTemplateRegistry.class);
     private ConcurrentMap<String, Future<String>> templates = new ConcurrentHashMap<String, Future<String>>();
-
     private final boolean useCache;
-
 	private String jsontPath;
 
     public CachingTemplateRegistry(boolean useCache, String jsontPath) {
@@ -80,9 +76,7 @@ public class CachingTemplateRegistry implements TemplateRegistry {
                     }
                  }
             );
-
             f = templates.putIfAbsent(templateName, future);
-
             if (f == null) {
                 f = future;
                 future.run();
@@ -115,12 +109,11 @@ public class CachingTemplateRegistry implements TemplateRegistry {
 
     private String readFromClasspath(String templateName) throws IOException {
         InputStream inputStream = null;
-    	try{
+    	try {
     		inputStream = getClass().getResourceAsStream("/" + templateName);
-    		if(inputStream != null){
+    		if (inputStream != null) {
 	    		return IOUtils.toString(new InputStreamReader(inputStream));
-	    	}
-	    	else{
+	    	} else {
 	    		throw new IOException();
 	    	}
     	} finally {
@@ -131,8 +124,8 @@ public class CachingTemplateRegistry implements TemplateRegistry {
     private String readFromFilesystem(String templateName) throws IOException {
         File template = new File(jsontPath, templateName);
     	InputStream inputStream = null;
-        try{
-	    	if(template.exists()){
+        try {
+	    	if (template.exists()) {
 	    		inputStream = new FileInputStream(template);
 	    		return IOUtils.toString(inputStream);
 	    	}

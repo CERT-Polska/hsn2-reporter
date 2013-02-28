@@ -44,13 +44,11 @@ public class JsonRendererImpl implements JsonRenderer {
 
     @Override
     public JsonRenderingResult render(ObjectDataReportingWrapper dataWrapper, String templateName) throws ResourceException {
-
         TemplateCompileOptions options = templateCompileOptions();
         List<JsonAttachment> attachments = new ArrayList<JsonAttachment>();
-        IProgramBuilder programBuilder = new HsnProgramBuilder(HsnFormatters.getInstance(attachments) );
+        IProgramBuilder programBuilder = new HsnProgramBuilder(HsnFormatters.getInstance(attachments));
         String template = registry.getTemplate(templateName);
         Template t = new Template(template, programBuilder, options);
-        
         String jsonWithAdditionalCommas = t.expand(dataWrapper);
         JSONObject jo = (JSONObject) JSONValue.parse(jsonWithAdditionalCommas);
         String jsonToString = jo.toString();
@@ -61,7 +59,6 @@ public class JsonRendererImpl implements JsonRenderer {
         TemplateCompileOptions options = new TemplateCompileOptions();
         options.setMeta("<<>>");
         options.setDefaultFormatter("json");
-
         return options;
     }
 }

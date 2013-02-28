@@ -7,3 +7,5 @@
 # Editor swap files
 *~
 *.swp
+
+test-output/

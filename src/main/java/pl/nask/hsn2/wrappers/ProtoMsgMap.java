@@ -33,7 +33,7 @@ import com.google.protobuf.GeneratedMessage;
  *
  *
  */
-public class ProtoMsgMap extends HashMap<String, Object> implements HsnContext {
+public final class ProtoMsgMap extends HashMap<String, Object> implements HsnContext {
 
     private final long jobId;
     private final long objectId;

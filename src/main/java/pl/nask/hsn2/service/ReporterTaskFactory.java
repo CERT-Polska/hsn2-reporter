@@ -35,9 +35,8 @@ import pl.nask.hsn2.wrappers.ObjectDataWrapper;
 import pl.nask.hsn2.wrappers.ParametersWrapper;
 
 public class ReporterTaskFactory implements TaskFactory {
-    private final static String TEMPLATE_PARAM = "template";
-    private final static String SERVICE_NAME_PARAM = "serviceName";
-
+    private static final String TEMPLATE_PARAM = "template";
+    private static final String SERVICE_NAME_PARAM = "serviceName";
     private final DataStoreConnector dsConnector;
     private final JsonRenderer jsonRenderer;
     private final String couchDbServerHostname;

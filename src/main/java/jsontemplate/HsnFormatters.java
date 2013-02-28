@@ -36,7 +36,7 @@ import pl.nask.hsn2.jsontemplate.formatters.RelatedFilesFormatter;
 
 public final class HsnFormatters implements IFormatterResolver {
 
-    private final static ConcurrentMap<String, IFormatter> FORMATTERS = new ConcurrentHashMap<String, IFormatter>();
+    private static final ConcurrentMap<String, IFormatter> FORMATTERS = new ConcurrentHashMap<String, IFormatter>();
 
     private static ObjectStoreConnector osConnector;
     static {

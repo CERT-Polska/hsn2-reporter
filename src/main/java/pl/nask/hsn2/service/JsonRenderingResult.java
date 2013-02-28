@@ -29,14 +29,13 @@ import org.slf4j.LoggerFactory;
 import pl.nask.hsn2.jsontemplate.formatters.JsonAttachment;
 
 public class JsonRenderingResult {
-	private final static Logger LOG = LoggerFactory.getLogger(JsonRenderingResult.class);
-
-	private final String document;
+	private static final Logger LOG = LoggerFactory.getLogger(JsonRenderingResult.class);
+	private final String doc;
 	private final List<JsonAttachment> attachments;
 
-	public JsonRenderingResult(String document, List<JsonAttachment> attachments) {
-		this.document = document;
-		this.attachments = attachments;
+	public JsonRenderingResult(String document, List<JsonAttachment> attachmentsList) {
+		doc = document;
+		attachments = attachmentsList;
 	}
 
 	public List<JsonAttachment> getAttachments() {
@@ -44,11 +43,11 @@ public class JsonRenderingResult {
 	}
 
 	public String getDocument() {
-		return document;
+		return doc;
 	}
 
 	public void validate() throws ParseException {
-		String trimedDocument = document.trim();
+		String trimedDocument = doc.trim();
 		LOG.debug("Got document to validate: \n{}\n", trimedDocument);
 		try {
 			JSONValue.parseWithException(trimedDocument);

@@ -24,7 +24,36 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class TemplateCompiler {
+/**
+ * Template compiler.
+ */
+final class TemplateCompiler {
+	/**
+	 * Section regex pattern.
+	 */
+	private static final Pattern SECTION_RE = Pattern.compile("(repeated)?\\s*(section)\\s+(\\S+)(.*)");
+	/**
+	 * Regex group 3.
+	 */
+	private static final int GROUP_THREE = 3;
+	/**
+	 * Regex group 4.
+	 */
+	private static final int GROUP_FOUR = 4;
+	/**
+	 * Initial size of token pattern cache.
+	 */
+	private static final int MAP_INIT_SIZE = 20;
+	/**
+	 * Token pattern cache map.
+	 */
+	private static ConcurrentHashMap<String, Pattern> tokenPatternCache = new ConcurrentHashMap<String, Pattern>(MAP_INIT_SIZE);
+
+	/**
+	 * Private constructor to prevent instantiation.
+	 */
+	private TemplateCompiler() {
+	}
 
 	/**
 	 * Compile the template string, calling methods on the 'program builder'.
@@ -99,8 +128,9 @@ class TemplateCompiler {
 			token = token.substring(metaLeftLength, token.length()
 					- metaRightLength);
 
-			if (token.startsWith("#"))
+			if (token.startsWith("#")) {
 				continue; // comment
+			}
 
 			if (token.startsWith(".")) {
 				token = token.substring(1);
@@ -113,8 +143,8 @@ class TemplateCompiler {
 				Matcher sectionMatcher = SECTION_RE.matcher(token);
 				if (sectionMatcher.find()) {
 					String repeated = sectionMatcher.group(1);
-					String sectionName = sectionMatcher.group(3);
-					String extraParams = sectionMatcher.group(4);
+					String sectionName = sectionMatcher.group(GROUP_THREE);
+					String extraParams = sectionMatcher.group(GROUP_FOUR);
 					builder.newSection(repeated != null, sectionName, extraParams);
 					balanceCounter += 1;
 					continue;
@@ -155,8 +185,9 @@ class TemplateCompiler {
 				System.arraycopy(parts, 1, formatters, 0, formatters.length);
 			}
 			builder.appendSubstitution(name, formatters);
-			if (hadNewline)
+			if (hadNewline) {
 				builder.append(new LiteralStatement("\n"));
+			}
 		}
 		// TRAILING TEXT
 		builder
@@ -169,12 +200,6 @@ class TemplateCompiler {
 
 		return builder.getRoot();
 	}
-
-	private static Pattern SECTION_RE = Pattern
-			.compile("(repeated)?\\s*(section)\\s+(\\S+)(.*)");
-
-	private static ConcurrentHashMap<String, Pattern> tokenPatternCache = new ConcurrentHashMap<String, Pattern>(
-			20);
 
 	private static Pattern makeTokenRegex(String metaLeft, String metaRight) {
 		String cacheKey = metaLeft + "!" + metaRight;

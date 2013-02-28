@@ -20,11 +20,10 @@
 package jsontemplate;
 
 class SectionStatement implements IStatement {
-
 	private Section block;
 
-	public SectionStatement(Section block) {
-		this.block = block;
+	public SectionStatement(Section sectionBlock) {
+		block = sectionBlock;
 	}
 
 	public void execute(ScopedContext context, ITemplateRenderCallback callback) {
@@ -41,5 +40,4 @@ class SectionStatement implements IStatement {
 
 		context.pop();
 	}
-
 }

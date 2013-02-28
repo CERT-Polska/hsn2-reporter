@@ -21,7 +21,6 @@ package jsontemplate;
 
 import java.util.ArrayList;
 
-@SuppressWarnings("serial")
 class StatementList extends ArrayList<IStatement> {
-
+	private static final long serialVersionUID = -6385070484687704584L;
 }

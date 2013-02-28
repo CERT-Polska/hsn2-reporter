@@ -19,15 +19,13 @@
 
 package jsontemplate;
 
+final class TemplateExecutor {
+	private TemplateExecutor() {
+	}
 
-class TemplateExecutor {
-
-	static void execute(StatementList statements,
-			ScopedContext context,
-			ITemplateRenderCallback callback) {
+	static void execute(StatementList statements, ScopedContext context, ITemplateRenderCallback callback) {
 		for (IStatement statement : statements) {
 			statement.execute(context, callback);
 		}
 	}
-
 }

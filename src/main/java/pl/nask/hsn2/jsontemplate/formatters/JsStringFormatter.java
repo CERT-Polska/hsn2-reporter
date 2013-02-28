@@ -32,7 +32,8 @@ public class JsStringFormatter implements IFormatter {
 		return escaped;
 	}
 
-	// This code was taken from org.apache.commons.jexl2.parser.StringParser (org.apache.commons-jexl:2.0.1) and modified
+	// This code was taken from org.apache.commons.jexl2.parser.StringParser (org.apache.commons-jexl:2.0.1) and
+	// modified
 
 	/** The length of an escaped unicode sequence. */
 	private static final int UCHAR_LEN = 4;
@@ -50,17 +51,16 @@ public class JsStringFormatter implements IFormatter {
 		for (int i = 0; i < length; ++i) {
 			char c = str.charAt(i);
 			if (c < LAST_ASCII) {
-				if(c == '\\'){
+				if (c == '\\') {
 					int next = i + 1;
-					if(next < length && str.charAt(next) == 'u'){
+					if (next < length && str.charAt(next) == 'u') {
 						strb.append('\\');
 						strb.append('\\');
 						continue;
 					}
 				}
 				strb.append(c);
-			} 
-			else {
+			} else {
 				strb.append('\\');
 				strb.append('\\');
 				strb.append('u');

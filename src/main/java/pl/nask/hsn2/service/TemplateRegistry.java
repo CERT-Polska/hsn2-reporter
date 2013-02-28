@@ -22,8 +22,5 @@ package pl.nask.hsn2.service;
 import pl.nask.hsn2.ResourceException;
 
 public interface TemplateRegistry {
-
-    public abstract String getTemplate(final String templateName)
-            throws ResourceException;
-
+	String getTemplate(final String templateName) throws ResourceException;
 }

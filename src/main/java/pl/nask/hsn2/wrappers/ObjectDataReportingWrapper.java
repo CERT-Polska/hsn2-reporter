@@ -34,7 +34,7 @@ import pl.nask.hsn2.protobuff.Object.Reference;
 import com.google.protobuf.GeneratedMessage;
 
 public class ObjectDataReportingWrapper extends IncompleteMap<String, Object> implements HsnContext {
-    private final Logger LOG = LoggerFactory.getLogger(ObjectDataReportingWrapper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ObjectDataReportingWrapper.class);
 
     private final ObjectDataWrapper data;
     private final DataStoreConnector dsConnector;
@@ -72,7 +72,7 @@ public class ObjectDataReportingWrapper extends IncompleteMap<String, Object> im
     @Override
     public boolean containsKey(Object key) {
         if (key instanceof String) {
-            return data.getAttributeWrapper((String)key) != null;
+            return data.getAttributeWrapper((String) key) != null;
         } else {
             return false;
         }
@@ -95,8 +95,9 @@ public class ObjectDataReportingWrapper extends IncompleteMap<String, Object> im
 
     private Object expandReference(String key, Object value) {
         Object result = expandedObjectCache.get(key);
-        if (result != null)
-            return result;
+        if (result != null) {
+			return result;
+		}
 
         String msgType = typeMappings.get(key);
         if (msgType == null) {
@@ -130,8 +131,7 @@ public class ObjectDataReportingWrapper extends IncompleteMap<String, Object> im
                 LOG.error("Exception", e);
                 return value;
             }
-        }
-        else {
+        } else {
             return value;
         }
     }

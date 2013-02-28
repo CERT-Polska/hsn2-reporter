@@ -25,10 +25,10 @@ package jsontemplate;
 public interface IFormatter {
 	/**
 	 * Format the given value.
-	 *
+	 * 
 	 * @param value
 	 *            the value to format
 	 * @return the formatted value
 	 */
-	public Object format(Object value);
+	Object format(Object value);
 }

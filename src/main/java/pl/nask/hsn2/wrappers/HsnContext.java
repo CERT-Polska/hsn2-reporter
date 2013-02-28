@@ -20,7 +20,7 @@
 package pl.nask.hsn2.wrappers;
 
 public interface HsnContext {
-    public long getObjectId();
+	long getObjectId();
 
-    public long getJobId();
+	long getJobId();
 }

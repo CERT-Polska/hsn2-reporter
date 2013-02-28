@@ -19,19 +19,16 @@
 
 package jsontemplate;
 
-
 public interface IProgramBuilder {
+	Section getRoot();
 
-	public Section getRoot();
+	void append(IStatement statement);
 
-	public void append(IStatement statement);
+	void appendSubstitution(String name, String... formatters);
 
-	public void appendSubstitution(String name, String... formatters);
+	void newSection(boolean repeated, String sectionName, String extraParams);
 
-	public void newSection(boolean repeated, String sectionName, String extraParams);
+	void newClause(String token);
 
-	public void newClause(String token);
-
-	public void endSection();
-
+	void endSection();
 }

@@ -27,7 +27,6 @@ import java.util.Collection;
 import java.util.Map;
 
 class ScopedContext {
-
 	private ArrayList<Object> stack;
 
 	public ScopedContext(Object dataDictionary) {
@@ -59,8 +58,9 @@ class ScopedContext {
 	}
 
 	public boolean isEmptyContext(Object cursorPosition) {
-		if (cursorPosition == null)
+		if (cursorPosition == null) {
 			return true;
+		}
 		if (cursorPosition instanceof Boolean) {
 			return ((Boolean) cursorPosition).booleanValue();
 		}
@@ -79,6 +79,7 @@ class ScopedContext {
 	 * @return the value associated with the name
 	 */
 	public Object lookup(String name) {
+		System.out.println("########" + name);
 		// start looking at the top of the stack
 		int i = this.stack.size() - 1;
 		while (true) {
@@ -86,13 +87,11 @@ class ScopedContext {
 			if (isNonLookupable(context)) {
 				// can't look it up here
 				i -= 1;
-			}
-			else {
+			} else {
 				Object value = lookup(context, name);
 				if (value == null) {
 					i -= 1;
-				}
-				else {
+				} else {
 					return value;
 				}
 			}
@@ -105,8 +104,7 @@ class ScopedContext {
 	private static Object lookup(Object context, String name) {
 		if (context instanceof Map) {
 			return ((Map) context).get(name);
-		}
-		else {
+		} else {
 			// bean?
 			Class<? extends Object> contextClass = context.getClass();
 			Object value = null;
@@ -128,7 +126,9 @@ class ScopedContext {
 				} catch (InvocationTargetException e) {
 					// swallow
 				}
-				if (value != null) return value;
+				if (value != null) {
+					return value;
+				}
 			}
 			// try field access
 			try {
@@ -149,7 +149,9 @@ class ScopedContext {
 	}
 
 	private static boolean isNonLookupable(Object context) {
-		if (context == null) return true;
+		if (context == null) {
+			return true;
+		}
 		Class<? extends Object> contextClass = context.getClass();
 		// primitives are non lookup-able, so are non-Map collections
 		if (Map.class.isAssignableFrom(contextClass)) {
@@ -171,5 +173,4 @@ class ScopedContext {
 	void pushObject(Object item) {
 		this.stack.add(item);
 	}
-
 }

@@ -28,11 +28,10 @@ import pl.nask.hsn2.wrappers.ProtoMsgMap;
 import com.google.protobuf.GeneratedMessage;
 
 public class AttachmentFormatter implements IFormatter {
-
     private final List<JsonAttachment> attachments;
 
-    public AttachmentFormatter(List<JsonAttachment> attachments) {
-        this.attachments = attachments;
+    public AttachmentFormatter(List<JsonAttachment> attachmentsList) {
+        attachments = attachmentsList;
     }
 
     @Override
@@ -47,8 +46,6 @@ public class AttachmentFormatter implements IFormatter {
                 return "\"" + att.getName() + "\"";
             }
         }
-
         return value;
     }
-
 }

@@ -28,10 +28,16 @@ import pl.nask.hsn2.protobuff.Object.Reference;
 import pl.nask.hsn2.protobuff.Resources.JSContextResults;
 import pl.nask.hsn2.protobuff.Resources.JSContextResults.JSClass;
 
-public class WrapperUtils {
-    static MockedDSConnector dsConnector = new MockedDSConnector();
+public final class WrapperUtils {
+	/**
+	 * Mocked DataStore connector.
+	 */
+    private static final MockedDSConnector DATA_STORE_CONNECTOR = new MockedDSConnector();
     static {
         initDsConnector();
+    }
+
+    private WrapperUtils() {
     }
 
     private static void initDsConnector() {
@@ -42,7 +48,7 @@ public class WrapperUtils {
             .setClassification(JSClass.MALICIOUS)
             .setWhitelisted(false);
 
-        dsConnector.addData(1, jscrBuilder.build());
+        DATA_STORE_CONNECTOR.addData(1, jscrBuilder.build());
     }
 
     public static ObjectData prepareSimpleTestMsg() {
@@ -68,10 +74,10 @@ public class WrapperUtils {
     }
 
     public static ObjectDataReportingWrapper prepareSimpleWrapper() {
-        return new ObjectDataReportingWrapper(1, new ObjectDataWrapper(prepareSimpleTestMsg()), dsConnector);
+        return new ObjectDataReportingWrapper(1, new ObjectDataWrapper(prepareSimpleTestMsg()), DATA_STORE_CONNECTOR);
     }
 
     public static ObjectDataReportingWrapper prepareWrapper(ObjectData msg) {
-        return new ObjectDataReportingWrapper(1, new ObjectDataWrapper(msg), dsConnector);
+        return new ObjectDataReportingWrapper(1, new ObjectDataWrapper(msg), DATA_STORE_CONNECTOR);
     }
 }

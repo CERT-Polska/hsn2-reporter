@@ -20,11 +20,11 @@
 package jsontemplate;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DefaultProgramBuilder implements IProgramBuilder {
-
-	Section currentBlock;
-	protected ArrayList<Section> stack;
+	private Section currentBlock;
+	private List<Section> stack;
 	private IFormatterResolver moreFormatters;
 
 	public DefaultProgramBuilder(IFormatterResolver moreFormatters) {
@@ -38,11 +38,11 @@ public class DefaultProgramBuilder implements IProgramBuilder {
 		this(null);
 	}
 
-	public Section getRoot() {
+	public final Section getRoot() {
 		return this.currentBlock;
 	}
 
-	public void append(IStatement statement) {
+	public final void append(IStatement statement) {
 		this.currentBlock.append(statement);
 	}
 
@@ -60,18 +60,17 @@ public class DefaultProgramBuilder implements IProgramBuilder {
 		return formatter;
 	}
 
-	public void appendSubstitution(String name, String... formatterNames) {
+	public final void appendSubstitution(String name, String... formatterNames) {
 		ArrayList<IFormatter> formatterObjects = new ArrayList<IFormatter>();
 		for (String formatterName : formatterNames) {
 			formatterObjects.add(this.getFormatter(formatterName));
 		}
-		this.currentBlock.append(new SubstitutionStatement(name,
-				(IFormatter[]) formatterObjects
-						.toArray(new IFormatter[formatterObjects.size()])));
+		this.currentBlock.append(new SubstitutionStatement(name, (IFormatter[]) formatterObjects.toArray(new IFormatter[formatterObjects
+				.size()])));
 
 	}
 
-	public void newSection(boolean repeated, String sectionName, String extraParams) {
+	public final void newSection(boolean repeated, String sectionName, String extraParams) {
 		Section newBlock = new Section(sectionName);
 		if (repeated) {
 			this.currentBlock.append(new RepeatedSectionStatement(newBlock));
@@ -83,13 +82,24 @@ public class DefaultProgramBuilder implements IProgramBuilder {
 
 	}
 
-	public void newClause(String name) {
+	public final void newClause(String name) {
 		this.currentBlock.newClause(name);
 	}
 
-	public void endSection() {
+	public final void endSection() {
 		this.stack.remove(this.stack.size() - 1);
 		this.currentBlock = this.stack.get(this.stack.size() - 1);
 	}
 
+	public Section getCurrentBlock() {
+		return currentBlock;
+	}
+
+	public void setCurrentBlock(Section currentBlock) {
+		this.currentBlock = currentBlock;
+	}
+
+	public List<Section> getStack() {
+		return stack;
+	}
 }

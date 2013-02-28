@@ -41,19 +41,21 @@ import pl.nask.hsn2.connector.REST.RestRequestor;
 import pl.nask.hsn2.jsontemplate.formatters.JsonAttachment;
 
 public class CouchDbConnectorImpl implements CouchDbConnector {
-    private final static Logger LOGGER = LoggerFactory.getLogger(CouchDbConnectorImpl.class);
+    private static final int SLEEP_TIME = 4000;
+	private static final int SAVE_ATTACHMENT_REPEAT_COUNT = 10;
+	private static final int COUCHDB_CREATED_STATUS_CODE = 201;
+	private static final Logger LOGGER = LoggerFactory.getLogger(CouchDbConnectorImpl.class);
     private final DataStoreConnector dsConnector;
     private final String documentId;
     private final CouchDbClient client;
 
-    public CouchDbConnectorImpl(CouchDbClient client, DataStoreConnector dsConnector, long jobId, long objectId, String serviceName) {
-        this.client = client;
+    public CouchDbConnectorImpl(CouchDbClient couchDbClient, DataStoreConnector dsConnector, long jobId, long objectId, String serviceName) {
+        this.client = couchDbClient;
         this.dsConnector = dsConnector;
 
         if (serviceName.isEmpty()) {
             this.documentId = String.format("%s:%s", jobId, objectId);
-        }
-        else {
+        } else {
             this.documentId = String.format("%s:%s:%s", jobId, objectId, serviceName);
         }
     }
@@ -66,14 +68,14 @@ public class CouchDbConnectorImpl implements CouchDbConnector {
 		} else {
 			revision = updateDocument(document, revision);
 		}
-		addAttachments(attachments,revision);
+		addAttachments(attachments, revision);
     }
 
 	/**
 	 * Checks if document exists.
 	 * 
 	 * @return Revision if it exists or null if it does not exists.
-	 * @throws StorageException
+	 * @throws StorageException Storage exception.
 	 */
 	private String doesDocumentExists() throws StorageException {
 		RestRequestor restClient = null;
@@ -120,7 +122,7 @@ public class CouchDbConnectorImpl implements CouchDbConnector {
             int code = restClient.getResponseCode();
             String msg = restClient.getResponseMessage();
             LOGGER.debug("CouchDB responded with {}, {}", code, msg);
-            if (code != 201) {
+            if (code != COUCHDB_CREATED_STATUS_CODE) {
             	throw new StorageException(String.format("Expected database to respond with code 201, got %s. Message is: %s", code, msg));
             }
             LOGGER.debug("Saved: \n{}", document);
@@ -129,13 +131,13 @@ public class CouchDbConnectorImpl implements CouchDbConnector {
         } catch (IOException e) {
             throw new StorageException("Error while connecting to the database", e);
         } finally {
-            if (restClient != null){
+            if (restClient != null) {
             	restClient.close();
             }
         }
     }
 
-    private String readRevision(InputStream inputStream) throws IOException{
+    private String readRevision(InputStream inputStream) throws IOException {
     	Reader reader = new InputStreamReader(inputStream);
     	JSONObject object = (JSONObject) JSONValue.parse(reader);
     	return (String) object.get("rev");
@@ -151,36 +153,36 @@ public class CouchDbConnectorImpl implements CouchDbConnector {
     	}
     }
 
-    private String saveAttachment(JsonAttachment attachment, String revision) throws StorageException, ResourceException{
-    	int repeatCount = 10;
-    	Exception exception = null;
-    	InputStream is = null;
-    	try{
-	    	for(int i = 0; i < repeatCount; i++){
-	    		is = dsConnector.getResourceAsStream(attachment.getJobId(), attachment.getKey());
-	    		try{
-	    			Response res = client.saveAttachment(is, attachment.getName(), "application/octet-stream", documentId, revision);
-	                return res.getRev();
-	    		} catch (Exception e) {
+	private String saveAttachment(JsonAttachment attachment, String revision) throws StorageException, ResourceException {
+		Exception exception = null;
+		InputStream is = null;
+		try {
+			for (int i = 0; i < SAVE_ATTACHMENT_REPEAT_COUNT; i++) {
+				is = dsConnector.getResourceAsStream(attachment.getJobId(), attachment.getKey());
+				try {
+					Response res = client.saveAttachment(is, attachment.getName(), "application/octet-stream", documentId, revision);
+					return res.getRev();
+				} catch (Exception e) {
 					IOUtils.closeQuietly(is);
-	    			if(i < repeatCount){
+					if (i < SAVE_ATTACHMENT_REPEAT_COUNT) {
 						try {
-							Thread.sleep(4000);
-						} catch (InterruptedException e1) {	}
-						LOGGER.debug("Problem with adding attachment:{}, to doc:{} rev:{}. attempts left: {}",new Object[]{attachment.getName(), documentId, revision, (repeatCount - i)});
-						LOGGER.debug(e.getMessage(),e);
-					}
-					else{
+							Thread.sleep(SLEEP_TIME);
+						} catch (InterruptedException e1) {
+							LOGGER.debug("Sleep interrupted");
+						}
+						LOGGER.debug("Problem with adding attachment:{}, to doc:{} rev:{}. attempts left: {}",
+								new Object[] { attachment.getName(), documentId, revision, (SAVE_ATTACHMENT_REPEAT_COUNT - i) });
+						LOGGER.debug(e.getMessage(), e);
+					} else {
 						exception = e;
 					}
 				}
-	    	}
-	    	throw new StorageException("Error adding attachment!",exception);
-    	}
-    	finally{
-    		IOUtils.closeQuietly(is);
-    	}
-    }
+			}
+			throw new StorageException("Error adding attachment!", exception);
+		} finally {
+			IOUtils.closeQuietly(is);
+		}
+	}
 
     @Override
     public void clientShutdown() {

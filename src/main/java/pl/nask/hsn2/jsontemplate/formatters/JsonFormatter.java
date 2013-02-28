@@ -24,12 +24,14 @@ import jsontemplate.IFormatter;
 import org.json.simple.JSONValue;
 
 public class JsonFormatter implements IFormatter {
-
 	/**
 	 * Very simple formatter which handles HSN2 maps.
+	 *
+	 * @param value Value object.
+	 * @return JSON string.
 	 */
 	@Override
-	public Object format(Object value) {
+	public final Object format(final Object value) {
 		String jsonString = JSONValue.toJSONString(value);
 		return jsonString;
 	}

@@ -23,11 +23,10 @@ import java.util.Collection;
 import java.util.Iterator;
 
 class RepeatedSectionStatement implements IStatement {
+	private final Section block;
 
-	private Section block;
-
-	public RepeatedSectionStatement(Section block) {
-		this.block = block;
+	public RepeatedSectionStatement(Section sectionBlock) {
+		block = sectionBlock;
 	}
 
 	public void execute(ScopedContext context, ITemplateRenderCallback callback) {
@@ -40,18 +39,15 @@ class RepeatedSectionStatement implements IStatement {
 			if (cursorValue instanceof Collection || cursorValue == null) {
 				items = (Collection) cursorValue;
 				pushed = false;
-			}
-			else {
+			} else {
 				throw new EvaluationError(String.format("sectionName is '@' but the cursor value is not a collection (is %s)", cursorValue.toString()));
 			}
-		}
-		else {
+		} else {
 			Object newContext = context.pushSection(this.block.getSectionName());
 			if (newContext instanceof Collection || newContext == null) {
 				items = (Collection) newContext;
 				pushed = true;
-			}
-			else {
+			} else {
 				throw new EvaluationError(String.format("cursor value for section '%s' is not a collection (is %s)", this.block.getSectionName(), newContext));
 			}
 		}
@@ -72,12 +68,13 @@ class RepeatedSectionStatement implements IStatement {
 				context.pop();
 				i++;
 			}
-		}
-		else {
+		} else {
 			TemplateExecutor.execute(this.block.getStatements("or"), context, callback);
 		}
 
-		if (pushed) context.pop();
+		if (pushed) {
+			context.pop();
+		}
 	}
 
 }

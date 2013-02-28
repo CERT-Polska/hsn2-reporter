@@ -25,64 +25,66 @@ import java.util.Set;
 
 public abstract class IncompleteMap<K, V> implements Map<K, V> {
 
-    @Override
+    private static final String NOT_IMPLEMENTED_MSG = "not implemented";
+
+	@Override
     public int size() {
-        throw new UnsupportedOperationException("not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_MSG);
     }
 
     @Override
     public boolean isEmpty() {
-        throw new UnsupportedOperationException("not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_MSG);
     }
 
     @Override
     public boolean containsKey(Object key) {
-        throw new UnsupportedOperationException("not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_MSG);
     }
 
     @Override
     public boolean containsValue(Object value) {
-        throw new UnsupportedOperationException("not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_MSG);
     }
 
     @Override
     public V get(Object key) {
-        throw new UnsupportedOperationException("not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_MSG);
     }
 
     @Override
     public V put(K key, V value) {
-        throw new UnsupportedOperationException("not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_MSG);
     }
 
     @Override
     public V remove(Object key) {
-        throw new UnsupportedOperationException("not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_MSG);
     }
 
     @Override
     public void putAll(Map<? extends K, ? extends V> m) {
-        throw new UnsupportedOperationException("not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_MSG);
     }
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException("not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_MSG);
     }
 
     @Override
     public Set<K> keySet() {
-        throw new UnsupportedOperationException("not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_MSG);
     }
 
     @Override
     public Collection<V> values() {
-        throw new UnsupportedOperationException("not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_MSG);
     }
 
     @Override
     public Set<java.util.Map.Entry<K, V>> entrySet() {
-        throw new UnsupportedOperationException("not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_MSG);
     }
 
 }

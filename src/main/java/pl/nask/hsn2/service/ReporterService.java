@@ -23,12 +23,12 @@ import java.io.IOException;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import jsontemplate.HsnFormatters;
 
 import org.apache.commons.daemon.Daemon;
 import org.apache.commons.daemon.DaemonContext;
 import org.apache.commons.daemon.DaemonController;
-import org.apache.commons.daemon.DaemonInitException;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.CouchDbException;
 import org.slf4j.Logger;
@@ -41,13 +41,17 @@ import pl.nask.hsn2.connector.REST.DataStoreConnector;
 import pl.nask.hsn2.connector.REST.DataStoreConnectorImpl;
 
 public final class ReporterService implements Daemon {
+	private static final int WAIT_TIME = 10000;
 
-	private final static Logger LOG = LoggerFactory.getLogger(ReporterService.class);
+	/**
+	 * Logger.
+	 */
+	private static final Logger LOG = LoggerFactory.getLogger(ReporterService.class);
 
 	private ReporterCommandLineParams cmd = null;
 	private Thread serviceRunner = null;
 	
-	public static void main(final String[] args) throws DaemonInitException, Exception {
+	public static void main(final String[] args) throws Exception {
 		ReporterService rs = new ReporterService();
 		rs.init(new DaemonContext() {
 			
@@ -81,11 +85,11 @@ public final class ReporterService implements Daemon {
 		}
 	}
 
-	private static void connectAndSetObjectStoreConnectorInFormatters(ReporterCommandLineParams cmd){
+	private static void connectAndSetObjectStoreConnectorInFormatters(ReporterCommandLineParams cmd) {
 		try {
 			HsnFormatters.setOsConnector(new ObjectStoreConnectorImpl(cmd.getConnectorAddress(), cmd.getObjectStoreQueueName()));
 		} catch (BusException e) {
-			LOG.error("Error in connection with ObjectStore.",e);
+			LOG.error("Error in connection with ObjectStore.", e);
 		}
 	}
 
@@ -99,7 +103,7 @@ public final class ReporterService implements Daemon {
 	
 
 	@Override
-	public void init(DaemonContext context) throws DaemonInitException,	Exception {
+	public void init(final DaemonContext context) throws Exception {
 		 this.cmd  = parseArguments(context.getArguments());
 
 		CouchDbClient couchDbClient = null;
@@ -107,7 +111,7 @@ public final class ReporterService implements Daemon {
 			couchDbClient = prepareCouchDbClient(cmd.getDatabaseAddress());
 			LOG.debug("CouchDB connect test - OK.");
 		} catch (IOException e) {
-			LOG.error("Shutting down {} service.Error connecting CouchDB",cmd.getServiceName());
+			LOG.error("Shutting down {} service.Error connecting CouchDB", cmd.getServiceName());
 //			System.exit(1);
 			throw e;
 		} finally {
@@ -139,7 +143,7 @@ public final class ReporterService implements Daemon {
 				Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 					
 					@Override
-					public void uncaughtException(Thread t, Throwable e) {
+					public void uncaughtException(final Thread t, final Throwable e) {
 						System.exit(1);
 					}
 				});
@@ -151,7 +155,7 @@ public final class ReporterService implements Daemon {
 				}
 				
 			}
-		},"Reporter-Service");
+		}, "Reporter-Service");
 		serviceRunner.start();
 		
 		
@@ -161,7 +165,7 @@ public final class ReporterService implements Daemon {
 	@Override
 	public void stop() throws InterruptedException {
 		serviceRunner.interrupt();
-		serviceRunner.join(10000);
+		serviceRunner.join(WAIT_TIME);
 		
 	}
 

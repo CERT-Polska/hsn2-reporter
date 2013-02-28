@@ -29,10 +29,19 @@ public class HsnSectionStatement implements IStatement {
     private final Section block;
     private final String structureType;
 
-    public HsnSectionStatement(Section block, String structureType) {
-        this.block = block;
-        String st = structureType == null ? "" : structureType.trim();
-        this.structureType = st.length() == 0 ? null : st;
+    public HsnSectionStatement(Section sectionBlock, String structureType) {
+        block = sectionBlock;
+        String st;
+        if (structureType == null) {
+        	st = "";
+        } else {
+        	st = structureType.trim();
+        }
+        if (st.isEmpty()) {
+        	this.structureType = null;
+        } else {
+        	this.structureType = st;
+        }
     }
 
     @Override
