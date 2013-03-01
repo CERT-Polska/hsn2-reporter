@@ -49,10 +49,6 @@ public class JsonRenderingResult {
 	public void validate() throws ParseException {
 		String trimedDocument = doc.trim();
 		LOG.debug("Got document to validate: \n{}\n", trimedDocument);
-		try {
-			JSONValue.parseWithException(trimedDocument);
-		} catch (ParseException pe) {
-			throw pe;
-		}
+		JSONValue.parseWithException(trimedDocument);
 	}
 }

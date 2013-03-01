@@ -27,7 +27,6 @@ import pl.nask.hsn2.InputDataException;
 import pl.nask.hsn2.ParameterException;
 import pl.nask.hsn2.ResourceException;
 import pl.nask.hsn2.StorageException;
-import pl.nask.hsn2.TaskContext;
 import pl.nask.hsn2.connector.CouchDbConnector;
 import pl.nask.hsn2.task.Task;
 import pl.nask.hsn2.wrappers.ObjectDataReportingWrapper;
@@ -39,8 +38,7 @@ public class ReporterTask implements Task {
 	private final CouchDbConnector couchDbConnector;
 	private final ObjectDataReportingWrapper data;
 
-	public ReporterTask(TaskContext jobContext, String templateName, ObjectDataReportingWrapper data, JsonRenderer jsonRenderer,
-			CouchDbConnector couchDbConnector) {
+	public ReporterTask(String templateName, ObjectDataReportingWrapper data, JsonRenderer jsonRenderer, CouchDbConnector couchDbConnector) {
 		this.templateName = templateName;
 		this.data = data;
 		this.jsonRenderer = jsonRenderer;
@@ -62,7 +60,7 @@ public class ReporterTask implements Task {
 				result = jsonRenderer.render(data, templateName);
 			} catch (Exception e) {
 				LOG.warn("Error rendering JSON document (will send TaskCompleted anyway...) !", e);
-				throw new InputDataException("Error rendering JSON document");
+				throw new InputDataException("Error rendering JSON document", e);
 			}
 
 			// process rendered document

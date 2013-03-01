@@ -28,8 +28,7 @@ public class JsStringFormatter implements IFormatter {
 	@Override
 	public Object format(Object value) {
 		String jsonString = JSONValue.toJSONString(value);
-		String escaped = escapeSlashAndUnicode(jsonString);
-		return escaped;
+		return escapeSlashAndUnicode(jsonString);
 	}
 
 	// This code was taken from org.apache.commons.jexl2.parser.StringParser (org.apache.commons-jexl:2.0.1) and

@@ -88,7 +88,7 @@ public class CachingTemplateRegistry implements TemplateRegistry {
         } catch (InterruptedException e) {
             throw new ResourceException("Interrupted while waiting for the resource", e);
         } catch (ExecutionException e) {
-            throw new ResourceException("Exception while producing the resource", e.getCause());
+            throw new ResourceException("Exception while producing the resource", e);
         }
     }
 

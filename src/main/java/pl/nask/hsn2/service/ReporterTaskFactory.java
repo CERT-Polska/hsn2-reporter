@@ -54,9 +54,9 @@ public class ReporterTaskFactory implements TaskFactory {
         try {
         	CouchDbClient couchDbClient = ReporterService.prepareCouchDbClient(couchDbServerHostname);
 			CouchDbConnector couchDbConnector = new CouchDbConnectorImpl(couchDbClient, dsConnector, jobId, data.getId(), parameters.get(SERVICE_NAME_PARAM));
-			return new ReporterTask(jobContext, parameters.get(TEMPLATE_PARAM), new ObjectDataReportingWrapper(jobId, data, dsConnector), jsonRenderer, couchDbConnector);
+			return new ReporterTask(parameters.get(TEMPLATE_PARAM), new ObjectDataReportingWrapper(jobId, data, dsConnector), jsonRenderer, couchDbConnector);
 		} catch (IOException e) {
-			throw new ParameterException("Could not connect to CouchDB. Is database hostname address valid?");
+			throw new ParameterException("Could not connect to CouchDB. Is database hostname address valid?", e);
 		}
     }
 }

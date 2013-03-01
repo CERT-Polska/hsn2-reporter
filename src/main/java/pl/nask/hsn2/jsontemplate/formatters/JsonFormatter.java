@@ -32,7 +32,6 @@ public class JsonFormatter implements IFormatter {
 	 */
 	@Override
 	public final Object format(final Object value) {
-		String jsonString = JSONValue.toJSONString(value);
-		return jsonString;
+		return JSONValue.toJSONString(value);
 	}
 }

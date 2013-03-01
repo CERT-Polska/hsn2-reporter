@@ -126,8 +126,7 @@ public class CouchDbConnectorImpl implements CouchDbConnector {
             	throw new StorageException(String.format("Expected database to respond with code 201, got %s. Message is: %s", code, msg));
             }
             LOGGER.debug("Saved: \n{}", document);
-            String revision = readRevision(restClient.getInputStream());
-            return revision;
+            return readRevision(restClient.getInputStream());
         } catch (IOException e) {
             throw new StorageException("Error while connecting to the database", e);
         } finally {
@@ -146,7 +145,7 @@ public class CouchDbConnectorImpl implements CouchDbConnector {
     private void addAttachments(List<JsonAttachment> attachments, String revision) throws ResourceException, StorageException {
     	for (JsonAttachment attachment: attachments) {
     		try {
-                revision = saveAttachment(attachment, revision);
+                saveAttachment(attachment, revision);
 	        } catch (DocumentConflictException e) {
 	            throw new StorageException("Error adding attachment: database reported a document conflict", e);
 	        }

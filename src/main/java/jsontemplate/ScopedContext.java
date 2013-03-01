@@ -24,10 +24,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 class ScopedContext {
-	private ArrayList<Object> stack;
+	private List<Object> stack;
 
 	public ScopedContext(Object dataDictionary) {
 		this.stack = new ArrayList<Object>();
@@ -79,7 +80,6 @@ class ScopedContext {
 	 * @return the value associated with the name
 	 */
 	public Object lookup(String name) {
-		System.out.println("########" + name);
 		// start looking at the top of the stack
 		int i = this.stack.size() - 1;
 		while (true) {

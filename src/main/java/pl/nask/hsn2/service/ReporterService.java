@@ -75,13 +75,12 @@ public final class ReporterService implements Daemon {
 	public static CouchDbClient prepareCouchDbClient(String hostname) throws IOException {
 		try {
 			URL url = new URL(hostname);
-			CouchDbClient client = new CouchDbClient(url.getPath(), true, url.getProtocol(), url.getHost(), url.getPort(), null, null);
-			return client;
+			return new CouchDbClient(url.getPath(), true, url.getProtocol(), url.getHost(), url.getPort(), null, null);
 		} catch (MalformedURLException e) {
 			throw new IllegalArgumentException("Malformed URL: " + hostname, e);
 		} catch (CouchDbException e) {
 			LOG.error("Cannot connect do CouchDB server: {}", hostname);
-			throw new IOException(e.getMessage());
+			throw new IOException(e.getMessage(), e);
 		}
 	}
 
@@ -112,7 +111,6 @@ public final class ReporterService implements Daemon {
 			LOG.debug("CouchDB connect test - OK.");
 		} catch (IOException e) {
 			LOG.error("Shutting down {} service.Error connecting CouchDB", cmd.getServiceName());
-//			System.exit(1);
 			throw e;
 		} finally {
 			if (couchDbClient != null) {
@@ -125,7 +123,7 @@ public final class ReporterService implements Daemon {
 	}
 
 	@Override
-	public void start() throws Exception {
+	public void start() {
 		TemplateRegistry templateRegistry = new CachingTemplateRegistry(cmd.getUseCacheForTemplates(), cmd.getJsontPath());
 		JsonRenderer jsonRenderer = new JsonRendererImpl(templateRegistry);
 
@@ -141,7 +139,6 @@ public final class ReporterService implements Daemon {
 			@Override
 			public void run() {
 				Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
-					
 					@Override
 					public void uncaughtException(final Thread t, final Throwable e) {
 						System.exit(1);
@@ -157,9 +154,6 @@ public final class ReporterService implements Daemon {
 			}
 		}, "Reporter-Service");
 		serviceRunner.start();
-		
-		
-		
 	}
 
 	@Override

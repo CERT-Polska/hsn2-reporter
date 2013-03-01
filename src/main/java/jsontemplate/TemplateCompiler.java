@@ -70,24 +70,30 @@ final class TemplateCompiler {
 	 *            compilation options.
 	 * @return The compiled program (obtained from the builder)
 	 */
-	static Section compile(String template, IProgramBuilder builder,
-			TemplateCompileOptions options) {
+	static Section compile(String template, IProgramBuilder builder, TemplateCompileOptions options) {
+		IProgramBuilder builderSafe;
+		TemplateCompileOptions optionsSafe;
 		if (options == null) {
-			options = new TemplateCompileOptions();
+			optionsSafe = new TemplateCompileOptions();
+		} else {
+			optionsSafe = options;
 		}
 		if (builder == null) {
-			builder = new DefaultProgramBuilder(options.getMoreFormatters());
+			builderSafe = new DefaultProgramBuilder(optionsSafe.getMoreFormatters());
+		} else {
+			builderSafe = builder;
 		}
-		String[] metas = splitMeta(options.getMeta());
+
+		String[] metas = splitMeta(optionsSafe.getMeta());
 		String metaLeft = metas[0];
 		String metaRight = metas[1];
-		char formatChar = options.getFormatChar();
+		char formatChar = optionsSafe.getFormatChar();
 		if (formatChar != '|' && formatChar != ':') {
 			throw new ConfigurationError(String.format(
 					"Only format characters : and | are accepted (got %s)", ""
 							+ formatChar));
 		}
-		String defaultFormatter = options.getDefaultFormatter();
+		String defaultFormatter = optionsSafe.getDefaultFormatter();
 
 		Pattern tokenRe = makeTokenRegex(metaLeft, metaRight);
 		// cache the lengths
@@ -112,7 +118,7 @@ final class TemplateCompiler {
 				// PROCESS TEXT
 				String token = template.substring(lastMatchIndex, matcher
 						.start());
-				builder.append(new LiteralStatement(token));
+				builderSafe.append(new LiteralStatement(token));
 			}
 			lastMatchIndex = matcher.end();
 
@@ -129,14 +135,14 @@ final class TemplateCompiler {
 					- metaRightLength);
 
 			if (token.startsWith("#")) {
-				continue; // comment
+				continue;
 			}
 
 			if (token.startsWith(".")) {
 				token = token.substring(1);
 				String literal = keywordLookup.get(token);
 				if (literal != null) {
-					builder.append(new LiteralStatement(literal));
+					builderSafe.append(new LiteralStatement(literal));
 					continue;
 				}
 
@@ -145,13 +151,13 @@ final class TemplateCompiler {
 					String repeated = sectionMatcher.group(1);
 					String sectionName = sectionMatcher.group(GROUP_THREE);
 					String extraParams = sectionMatcher.group(GROUP_FOUR);
-					builder.newSection(repeated != null, sectionName, extraParams);
+					builderSafe.newSection(repeated != null, sectionName, extraParams);
 					balanceCounter += 1;
 					continue;
 				}
 
 				if (token.equals("or") || token.equals("alternates with")) {
-					builder.newClause(token);
+					builderSafe.newClause(token);
 				}
 
 				if (token.equals("end")) {
@@ -163,7 +169,7 @@ final class TemplateCompiler {
 												"Got too many %send%s statements. You may have mistyped an earlier 'section' or 'repeated section' directive.",
 												metaLeft, metaRight));
 					}
-					builder.endSection();
+					builderSafe.endSection();
 				}
 				continue;
 			}
@@ -184,21 +190,20 @@ final class TemplateCompiler {
 				formatters = new String[parts.length - 1];
 				System.arraycopy(parts, 1, formatters, 0, formatters.length);
 			}
-			builder.appendSubstitution(name, formatters);
+			builderSafe.appendSubstitution(name, formatters);
 			if (hadNewline) {
-				builder.append(new LiteralStatement("\n"));
+				builderSafe.append(new LiteralStatement("\n"));
 			}
 		}
 		// TRAILING TEXT
-		builder
-				.append(new LiteralStatement(template.substring(lastMatchIndex)));
+		builderSafe.append(new LiteralStatement(template.substring(lastMatchIndex)));
 
 		if (balanceCounter != 0) {
 			throw new TemplateSyntaxError(String.format(
 					"Got too few %send%s statements.", metaLeft, metaRight));
 		}
 
-		return builder.getRoot();
+		return builderSafe.getRoot();
 	}
 
 	private static Pattern makeTokenRegex(String metaLeft, String metaRight) {
