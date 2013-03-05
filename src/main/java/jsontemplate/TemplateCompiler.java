@@ -219,13 +219,8 @@ final class TemplateCompiler {
 
 	private static String[] splitMeta(String meta) {
 		int n = meta.length();
-		if (n < 0) {
-			// This should never happen.
-			throw new ConfigurationError(String.format("%s length is negative", meta));
-		} else {
-			if (n % 2 == 1) {
-				throw new ConfigurationError(String.format("%s has an odd number of characters", meta));
-			}
+		if (n % 2 != 0) {
+			throw new ConfigurationError(String.format("%s has an odd number of characters", meta));
 		}
 		return new String[] { meta.substring(0, n / 2), meta.substring(n / 2) };
 	}
