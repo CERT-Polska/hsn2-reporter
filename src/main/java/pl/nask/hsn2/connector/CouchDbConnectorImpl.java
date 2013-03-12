@@ -54,9 +54,9 @@ public class CouchDbConnectorImpl implements CouchDbConnector {
         this.dsConnector = dsConnector;
 
         if (serviceName.isEmpty()) {
-            this.documentId = String.format("%s:%s", jobId, objectId);
+            documentId = String.format("%s:%s", jobId, objectId);
         } else {
-            this.documentId = String.format("%s:%s:%s", jobId, objectId, serviceName);
+            documentId = String.format("%s:%s:%s", jobId, objectId, serviceName);
         }
     }
 
@@ -107,7 +107,8 @@ public class CouchDbConnectorImpl implements CouchDbConnector {
 		try {
 			Response response = client.update(json);
 			String newRevision = response.getRev();
-			LOGGER.info("Document updated (old revision = {}, new revision = {})\n{}", new Object[] { revision, newRevision, jsonDocument });
+			LOGGER.debug("Updated: \n{}", jsonDocument);
+			LOGGER.info("Document updated:  (old revision = {}, new revision = {})\n{}", new Object[] {documentId, revision, newRevision});
 			return newRevision;
 		} catch (org.lightcouch.CouchDbException e) {
 			throw new StorageException("Exception while updating CouchDB document", e);
@@ -117,7 +118,7 @@ public class CouchDbConnectorImpl implements CouchDbConnector {
     private String addDocument(String document) throws StorageException {
         RestRequestor restClient = null;
         try {
-            LOGGER.debug("Will use {} (PUT) to add document", client.getDBUri().toString());
+            LOGGER.info("Will use {} (PUT) to add document", client.getDBUri().toString());
             restClient = RestRequestor.put(client.getDBUri().toString() + "/" + documentId, "application/json;charset=utf-8", document.getBytes());
             int code = restClient.getResponseCode();
             String msg = restClient.getResponseMessage();
@@ -126,7 +127,9 @@ public class CouchDbConnectorImpl implements CouchDbConnector {
             	throw new StorageException(String.format("Expected database to respond with code 201, got %s. Message is: %s", code, msg));
             }
             LOGGER.debug("Saved: \n{}", document);
-            return readRevision(restClient.getInputStream());
+            String revision = readRevision(restClient.getInputStream());
+            LOGGER.info("Document saved: id = {} revision = {}", revision, documentId);
+            return revision;
         } catch (IOException e) {
             throw new StorageException("Error while connecting to the database", e);
         } finally {
@@ -144,11 +147,7 @@ public class CouchDbConnectorImpl implements CouchDbConnector {
 
     private void addAttachments(List<JsonAttachment> attachments, String revision) throws ResourceException, StorageException {
     	for (JsonAttachment attachment: attachments) {
-    		try {
-                saveAttachment(attachment, revision);
-	        } catch (DocumentConflictException e) {
-	            throw new StorageException("Error adding attachment: database reported a document conflict", e);
-	        }
+    		revision = saveAttachment(attachment, revision);
     	}
     }
 
@@ -163,15 +162,17 @@ public class CouchDbConnectorImpl implements CouchDbConnector {
 					return res.getRev();
 				} catch (Exception e) {
 					IOUtils.closeQuietly(is);
+					
+					Object[] warnDetails = {attachment.getName(), documentId, revision, (SAVE_ATTACHMENT_REPEAT_COUNT - i), e.getMessage()};
+					LOGGER.warn("Problem with adding attachment:{}, to doc:{} rev:{}. attempts left: {} cause: {}",	warnDetails);
+					LOGGER.debug(e.getMessage(), e);
+					
 					if (i < SAVE_ATTACHMENT_REPEAT_COUNT) {
 						try {
 							Thread.sleep(SLEEP_TIME);
 						} catch (InterruptedException e1) {
-							LOGGER.debug("Sleep interrupted");
+							LOGGER.debug("Sleep interrupted", e1);
 						}
-						LOGGER.debug("Problem with adding attachment:{}, to doc:{} rev:{}. attempts left: {}",
-								new Object[] { attachment.getName(), documentId, revision, (SAVE_ATTACHMENT_REPEAT_COUNT - i) });
-						LOGGER.debug(e.getMessage(), e);
 					} else {
 						exception = e;
 					}
@@ -185,6 +186,6 @@ public class CouchDbConnectorImpl implements CouchDbConnector {
 
     @Override
     public void clientShutdown() {
-    	this.client.shutdown();
+    	client.shutdown();
     }
 }
