@@ -28,10 +28,9 @@ public class JobIdFormatter implements IFormatter {
 	public Object format(Object value) {
 		if (value instanceof HsnContext) {
             HsnContext context = (HsnContext) value;
-            return "\"" + context.getJobId() + "\"";
+            return context.getJobId();
         } else {
             return value;
         }
 	}
-
 }
