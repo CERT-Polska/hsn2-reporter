@@ -102,4 +102,15 @@ public class JsStringFormatterTest {
 	public final void formatLowUnicode() {
 		Assert.assertEquals(FORMATTER.format(LOW_UNICODE), "\"\\\\u0099\"");
 	}
+
+	/**
+	 * Formatter has to return text value. All numbers has to be enclosed within quotation marks.
+	 */
+	@Test
+	public final void formatNumber() {
+		Assert.assertEquals(FORMATTER.format("abc"), "\"abc\"");
+		Assert.assertEquals(FORMATTER.format(11), "\"11\"");
+		Assert.assertEquals(FORMATTER.format(12d), "\"12.0\"");
+		Assert.assertEquals(FORMATTER.format(Long.valueOf(13)), "\"13\"");
+	}
 }
