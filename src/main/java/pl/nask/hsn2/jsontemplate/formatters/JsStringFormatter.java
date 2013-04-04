@@ -28,7 +28,15 @@ public class JsStringFormatter implements IFormatter {
 	@Override
 	public Object format(Object value) {
 		String jsonString = JSONValue.toJSONString(value);
-		return escapeSlashAndUnicode(jsonString);
+		String result = escapeSlashAndUnicode(jsonString);
+
+		// If value is Number result will be JSON number, which means no quotation marks. Return value has to be JSON
+		// text, so it have to be enclosed within quotation marks.
+		if (!result.startsWith("\"")) {
+			result = "\"" + result + "\"";
+		}
+
+		return result;
 	}
 
 	// This code was taken from org.apache.commons.jexl2.parser.StringParser (org.apache.commons-jexl:2.0.1) and
