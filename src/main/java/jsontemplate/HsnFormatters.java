@@ -18,6 +18,7 @@
  */
 
 package jsontemplate;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,44 +32,43 @@ import pl.nask.hsn2.jsontemplate.formatters.JsStringFormatter;
 import pl.nask.hsn2.jsontemplate.formatters.JsonAttachment;
 import pl.nask.hsn2.jsontemplate.formatters.JsonFormatter;
 import pl.nask.hsn2.jsontemplate.formatters.NodeRefFormatter;
+import pl.nask.hsn2.jsontemplate.formatters.ObjectIdFormatter;
 import pl.nask.hsn2.jsontemplate.formatters.RelatedFilesFormatter;
-
 
 public final class HsnFormatters implements IFormatterResolver {
 
-    private static final ConcurrentMap<String, IFormatter> FORMATTERS = new ConcurrentHashMap<String, IFormatter>();
+	private static final ConcurrentMap<String, IFormatter> FORMATTERS = new ConcurrentHashMap<String, IFormatter>();
 
-    private static ObjectStoreConnector osConnector;
-    static {
-        FORMATTERS.put("json", new JsonFormatter());
-        FORMATTERS.put("js-string", new JsStringFormatter());
-        FORMATTERS.put("hsn-node-ref", new NodeRefFormatter());
-        FORMATTERS.put("hsn-job-id", new JobIdFormatter());
-        FORMATTERS.put("hsn-related-files", new RelatedFilesFormatter(osConnector));
-    }
+	private static ObjectStoreConnector osConnector;
+	static {
+		FORMATTERS.put("json", new JsonFormatter());
+		FORMATTERS.put("js-string", new JsStringFormatter());
+		FORMATTERS.put("hsn-node-ref", new NodeRefFormatter());
+		FORMATTERS.put("hsn-job-id", new JobIdFormatter());
+		FORMATTERS.put("hsn-object-id", new ObjectIdFormatter());
+		FORMATTERS.put("hsn-related-files", new RelatedFilesFormatter(osConnector));
+	}
 
-    private Map<String, IFormatter> contextFormatters = new HashMap<String, IFormatter>();
+	private Map<String, IFormatter> contextFormatters = new HashMap<String, IFormatter>();
 
-    public static void setOsConnector(ObjectStoreConnector osConnector) {
-        HsnFormatters.osConnector = osConnector;
-    }
+	public static void setOsConnector(ObjectStoreConnector osConnector) {
+		HsnFormatters.osConnector = osConnector;
+	}
 
-    public HsnFormatters(List<JsonAttachment> attachments) {
-        contextFormatters.put("hsn-attachment", new AttachmentFormatter(attachments));
-    }
+	public HsnFormatters(List<JsonAttachment> attachments) {
+		contextFormatters.put("hsn-attachment", new AttachmentFormatter(attachments));
+	}
 
-    public static IFormatterResolver getInstance(List<JsonAttachment> attachments) {
-        return new HsnFormatters(attachments);
-    }
+	public static IFormatterResolver getInstance(List<JsonAttachment> attachments) {
+		return new HsnFormatters(attachments);
+	}
 
-    @Override
-    public IFormatter getFormatter(String formatterName) {
-        IFormatter f = contextFormatters.get(formatterName);
-        if (f == null) {
-            f = FORMATTERS.get(formatterName);
-        }
-
-        return f;
-    }
-
+	@Override
+	public IFormatter getFormatter(String formatterName) {
+		IFormatter f = contextFormatters.get(formatterName);
+		if (f == null) {
+			f = FORMATTERS.get(formatterName);
+		}
+		return f;
+	}
 }
