@@ -46,13 +46,13 @@ public final class HsnFormatters implements IFormatterResolver {
 		FORMATTERS.put("hsn-node-ref", new NodeRefFormatter());
 		FORMATTERS.put("hsn-job-id", new JobIdFormatter());
 		FORMATTERS.put("hsn-object-id", new ObjectIdFormatter());
-		FORMATTERS.put("hsn-related-files", new RelatedFilesFormatter(osConnector));
 	}
 
 	private Map<String, IFormatter> contextFormatters = new HashMap<String, IFormatter>();
 
 	public static void setOsConnector(ObjectStoreConnector osConnector) {
 		HsnFormatters.osConnector = osConnector;
+		FORMATTERS.put("hsn-related-files", new RelatedFilesFormatter(HsnFormatters.osConnector));
 	}
 
 	public HsnFormatters(List<JsonAttachment> attachments) {
