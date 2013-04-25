@@ -26,8 +26,8 @@ import java.util.Map;
 
 import pl.nask.hsn2.ResourceException;
 import pl.nask.hsn2.StorageException;
+import pl.nask.hsn2.connector.REST.DataResponse;
 import pl.nask.hsn2.connector.REST.DataStoreConnector;
-import pl.nask.hsn2.protobuff.DataStore.DataResponse;
 import pl.nask.hsn2.protobuff.Resources.JSContextResults;
 
 import com.google.protobuf.GeneratedMessage;
@@ -54,7 +54,7 @@ public class MockedDSConnector implements DataStoreConnector {
     }
 
     @Override
-    public DataResponse sendGet(long jobId, long dataId) throws IOException {
+    public InputStream sendGet(long jobId, long dataId) throws IOException {
         throw new UnsupportedOperationException();
     }
 
