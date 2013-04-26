@@ -9,3 +9,4 @@
 *.swp
 
 test-output/
+coverage-report/
