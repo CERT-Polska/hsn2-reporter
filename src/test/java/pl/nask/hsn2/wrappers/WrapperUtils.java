@@ -46,7 +46,8 @@ public final class WrapperUtils {
             .addAllMaliciousKeywords(Arrays.asList("mk1", "mk2"))
             .addAllSuspiciousKeywords(Arrays.asList("sk1", "sk2"))
             .setClassification(JSClass.MALICIOUS)
-            .setWhitelisted(false);
+            .setWhitelisted(false)
+            .setHash("098f6bcd4621d373cade4e832627b4f6");
 
         DATA_STORE_CONNECTOR.addData(1, jscrBuilder.build());
     }
