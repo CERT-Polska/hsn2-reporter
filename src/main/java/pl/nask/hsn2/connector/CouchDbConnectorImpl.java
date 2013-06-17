@@ -29,7 +29,6 @@ import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.lightcouch.CouchDbClient;
-import org.lightcouch.DocumentConflictException;
 import org.lightcouch.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,11 +47,13 @@ public class CouchDbConnectorImpl implements CouchDbConnector {
     private final DataStoreConnector dsConnector;
     private final String documentId;
     private final CouchDbClient client;
+    private final String couchURI;
 
     public CouchDbConnectorImpl(CouchDbClient couchDbClient, DataStoreConnector dsConnector, long jobId, long objectId, String serviceName) {
         this.client = couchDbClient;
         this.dsConnector = dsConnector;
-
+        this.couchURI = client.getDBUri().toString();
+        
         if (serviceName.isEmpty()) {
             documentId = String.format("%s:%s", jobId, objectId);
         } else {
@@ -80,7 +81,7 @@ public class CouchDbConnectorImpl implements CouchDbConnector {
 	private String doesDocumentExists() throws StorageException {
 		RestRequestor restClient = null;
 		try {
-			restClient = RestRequestor.head(client.getDBUri().toString() + "/" + documentId);
+			restClient = RestRequestor.head(couchURI + "/" + documentId);
 
 			// get revision - if document has not been found it will be null
 			String revision = restClient.getHeaderField("Etag");
@@ -100,7 +101,7 @@ public class CouchDbConnectorImpl implements CouchDbConnector {
 	}
 
 	private String updateDocument(String jsonDocument, String revision) throws StorageException {
-		LOGGER.info("Will use {} (PUT) to update document", client.getDBUri().toString());
+		LOGGER.info("Will use {} (PUT) to update document", couchURI);
 		JSONObject json = (JSONObject) JSONValue.parse(jsonDocument);
 		json.put("_id", documentId);
 		json.put("_rev", revision);
@@ -118,8 +119,8 @@ public class CouchDbConnectorImpl implements CouchDbConnector {
     private String addDocument(String document) throws StorageException {
         RestRequestor restClient = null;
         try {
-            LOGGER.info("Will use {} (PUT) to add document", client.getDBUri().toString());
-            restClient = RestRequestor.put(client.getDBUri().toString() + "/" + documentId, "application/json;charset=utf-8", document.getBytes());
+            LOGGER.info("Will use {} (PUT) to add document", couchURI);
+            restClient = RestRequestor.put(couchURI + "/" + documentId, "application/json;charset=utf-8", document.getBytes());
             int code = restClient.getResponseCode();
             String msg = restClient.getResponseMessage();
             LOGGER.debug("CouchDB responded with {}, {}", code, msg);
