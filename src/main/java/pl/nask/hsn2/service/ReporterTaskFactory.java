@@ -37,14 +37,11 @@ import pl.nask.hsn2.wrappers.ParametersWrapper;
 public class ReporterTaskFactory implements TaskFactory {
     private static final String TEMPLATE_PARAM = "template";
     private static final String SERVICE_NAME_PARAM = "serviceName";
-    private final DataStoreConnector couchConnector;
-    private final JsonRenderer jsonRenderer;
-    private final String couchDbServerHostname;
+    private static DataStoreConnector dsConnector;
+    private static JsonRenderer jsonRenderer;
+    private static String couchDbServerHostname;
 
-    public ReporterTaskFactory(JsonRenderer jsonRenderer, DataStoreConnector dsConnector, String couchDbServerHostname) {
-        this.couchConnector = dsConnector;
-        this.jsonRenderer = jsonRenderer;
-        this.couchDbServerHostname = couchDbServerHostname;
+    public ReporterTaskFactory() {
     }
 
     @Override
@@ -52,11 +49,19 @@ public class ReporterTaskFactory implements TaskFactory {
         long jobId = jobContext.getJobId();
 
         try {
+        	//TODO: probably this should be create only for each thread
         	CouchDbClient couchDbClient = ReporterService.prepareCouchDbClient(couchDbServerHostname);
-			CouchDbConnector couchDbConnector = new CouchDbConnectorImpl(couchDbClient, couchConnector, jobId, data.getId(), parameters.get(SERVICE_NAME_PARAM));
-			return new ReporterTask(parameters.get(TEMPLATE_PARAM), new ObjectDataReportingWrapper(jobId, data, couchConnector), jsonRenderer, couchDbConnector);
+        	CouchDbConnector couchDbConnector = new CouchDbConnectorImpl(couchDbClient, dsConnector, jobId, data.getId(), parameters.get(SERVICE_NAME_PARAM));
+        	
+			return new ReporterTask(parameters.get(TEMPLATE_PARAM), new ObjectDataReportingWrapper(jobId, data, dsConnector), jsonRenderer, couchDbConnector);
 		} catch (IOException e) {
 			throw new ParameterException("Could not connect to CouchDB. Is database hostname address valid?", e);
 		}
     }
+
+	public static void prepereForAllThreads(JsonRenderer jsonRenderer, DataStoreConnector dsConnector, String couchDbServerHostname) {
+		ReporterTaskFactory.dsConnector = dsConnector;
+		ReporterTaskFactory.jsonRenderer = jsonRenderer;
+		ReporterTaskFactory.couchDbServerHostname = couchDbServerHostname;
+	}
 }

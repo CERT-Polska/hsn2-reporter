@@ -90,7 +90,7 @@ public final class ReporterService extends ServiceMain{
 	}
 
 	@Override
-	protected TaskFactory createTaskFactory() {
+	protected Class<? extends TaskFactory> initializeTaskFactory() {
 		checkCouchDB();
 		ReporterCommandLineParams cmd  = (ReporterCommandLineParams)getCommandLineParams();
 		
@@ -100,7 +100,8 @@ public final class ReporterService extends ServiceMain{
 		DataStoreConnector dsConnector = new DataStoreConnectorImpl(cmd.getFormattedDataStoreAddress());
 
 		connectAndSetObjectStoreConnectorInFormatters(cmd);
-		return new ReporterTaskFactory(jsonRenderer, dsConnector, cmd.getDatabaseAddress());
+		ReporterTaskFactory.prepereForAllThreads(jsonRenderer, dsConnector, cmd.getDatabaseAddress());
+		return ReporterTaskFactory.class;
 	}
 	
 	@Override
