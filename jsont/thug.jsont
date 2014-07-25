@@ -6,51 +6,61 @@
 	"details":{
 		"structure":"list",
 		"name":"Interaction with the web page",
-		"value":[
-			<<.section thug_active>>
-			<<.or>>
-				"structure":"text",
-				"name":"error message",
-				"value":<<thug_error_message>>
+		"value":
+		[
+			<<.section thug_error_message>>
+				{
+					"structure":"text",
+					"name":"error message",
+					"value":<<thug_error_message>>
+				}
 			<<.end>>
 			
 			{
 				"structure":"list",
 				"name":"js_contexts",
-				"value":[
+				"value":
+				[
 					<<.section js_context_list JSContextList>>
-						<<.repeated section contexts>>{
+					<<.repeated section contexts>>
+					{
 						"structure":"text",
 						"name":"context <<id|str>>",
 						"value":"<<source|html-attr-value>>"
-					},
-						<<.end>>
+					}
+					<<.alternates with>>,
+					<<.end>>
 					<<.end>>
 				]
 			},
-			<<.end>>{
+			{
 				"structure":"list",
 				"name":"thug_behaviors",
-				"value":[
-					<<.section thug_behaviors BehaviorList>>
-						<<.repeated section behavior>>{
+				"value":
+				[
+					<<.section thug_behaviors BehaviorsList>>
+					<<.repeated section behavior>>
+					{
 						"structure":"list",
 						"name":"behavior",
-						"value":[
-							<<.description_text>>{
+						"value":
+						[
+							<<.section description_text>>{
 								"structure":"text",
 								"name":"description",
 								"value":<<@>>
 							},
-							<<.discovery_method>>{
+							<<.end>>
+							<<.section discovery_method>>{
 								"structure":"text",
 								"name":"discovery method",
 								"value":<<@>>
-							},
+							}
 							<<.end>>
 						]
-					},
-						<<.end>>
+					}
+					<<.alternates with>>,
+					<<.end>>
 					<<.end>>
 				]
 			}
