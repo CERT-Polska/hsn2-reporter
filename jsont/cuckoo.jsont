@@ -4,7 +4,7 @@
   "service":"cuckoo",
   "node":<<@|hsn-node-ref>>,
   <<.section cuckoo_classification>>
-  "classification":<<@|string>>,
+  "classification":<<@>>,
   <<.or>>
   "classification":"unknown",
   <<.end>>
@@ -54,7 +54,7 @@
       <<.end>>
       <<.section cuckoo_classification_reason>>
       {
-        "structure":"string",
+        "structure":"text",
         "name":"Reason for classification",
         "value":<<@|js-string>>
       },
