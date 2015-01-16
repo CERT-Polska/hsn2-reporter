@@ -63,7 +63,7 @@ class ScopedContext {
 			return true;
 		}
 		if (cursorPosition instanceof Boolean) {
-			return ((Boolean) cursorPosition).booleanValue();
+			return !((Boolean) cursorPosition).booleanValue();
 		}
 		if (cursorPosition instanceof Collection) {
 			return ((Collection) cursorPosition).size() == 0;
