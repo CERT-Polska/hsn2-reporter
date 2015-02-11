@@ -60,7 +60,7 @@ public class ReporterTask implements Task {
 				result = jsonRenderer.render(data, templateName);
 			} catch (Exception e) {
 				LOG.warn("Error rendering JSON document (will send TaskCompleted anyway...) !", e);
-				throw new InputDataException("Error rendering JSON document", e);
+				throw new InputDataException("Error rendering JSON document (template: " + templateName + ", msg: "+ e.getMessage()+")", e);
 			}
 
 			// process rendered document
