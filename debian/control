@@ -1,9 +1,12 @@
-Package: hsn2-reporter
-Version: {VER}
+Source: hsn2-reporter
 Section: unknown
 Priority: optional
+Maintainer: CERT Polska <info@cert.pl>
+Build-Depends: debhelper (>= 8.0.0), maven
+Standards-Version: 3.9.3
+
+Package: hsn2-reporter
 Architecture: all
 Recommends: couchdb (>= 1.0)
-Maintainer: Pawel Jacewicz <pawel.jacewicz@cert.pl>
+Depends: ${misc:Depends}
 Description: HSN2 Service Reporter
-Distribution: {DEBIAN_DIST}
