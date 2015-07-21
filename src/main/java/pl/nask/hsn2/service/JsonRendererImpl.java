@@ -30,6 +30,7 @@ import jsontemplate.TemplateCompileOptions;
 
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.json.simple.parser.ParseException;
 
 import pl.nask.hsn2.ResourceException;
 import pl.nask.hsn2.jsontemplate.formatters.JsonAttachment;
@@ -50,7 +51,14 @@ public class JsonRendererImpl implements JsonRenderer {
         String template = registry.getTemplate(templateName);
         Template t = new Template(template, programBuilder, options);
         String jsonWithAdditionalCommas = t.expand(dataWrapper);
-        JSONObject jo = (JSONObject) JSONValue.parse(jsonWithAdditionalCommas);
+        JSONObject jo;
+		try {
+			jo = (JSONObject) JSONValue.parseWithException(jsonWithAdditionalCommas);
+		} catch (ParseException e) {
+			throw new ResourceException("Cannot parse object data! id: " + dataWrapper.getId(), e);
+		} catch (Exception e) {
+			throw new ResourceException("Error! id: " + dataWrapper.getId(), e);
+		}
         String jsonToString = jo.toString();
         return new JsonRenderingResult(jsonToString, attachments);
     }
