@@ -15,7 +15,7 @@ HSN2_COMPONENT="reporter"
 MAINCLASS="pl.nask.hsn2.service.ReporterService"
 CONFFILE=/etc/hsn2/reporter.conf
 
-HSN2_JMX_PORT=1108
+#HSN2_JMX_PORT=1108
 HSN2_JVM_PARAMS_MEMORY="-Xmx700m -Xms400m"
 
 . /lib/hsn2/init-functions-java
