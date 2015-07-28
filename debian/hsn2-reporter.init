@@ -24,7 +24,8 @@ prepare_start() {
 	HSN2_COMPONENT_PARAMS="--connector $BROKER_ADDRESS \
 		--dataStore http://$DATASTORE_ADDRESS \
 		--maxThreads $MAX_THREADS \
-		--jsonTemplatesPath $JSON_TEMPLATE_PATH"
+		--jsonTemplatesPath $JSON_TEMPLATE_PATH \
+		--logLevel $LOG_LEVEL"
 }
 
 choose_java_service_action $@
