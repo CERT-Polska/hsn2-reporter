@@ -18,6 +18,11 @@
 	<<.or>>
 	"thug_active":false,
 	<<.end>>
+	<<.section thug_error>>
+		"thug_error":<<@>>,
+	<<.or>>
+		"thug_error":"",
+	<<.end>>
   "cuckoo_details":
     {"structure":"list",
     "name":"Analysis details of Cuckoo Service",
@@ -76,14 +81,6 @@
 		"name":"Interaction with the web page",
 		"value":
 		[
-			<<.section thug_error>>
-				{
-					"structure":"text",
-					"name":"error message",
-					"value":<<thug_error>>
-				}
-			<<.end>>
-			
 			{
 				"structure":"list",
 				"name":"js_contexts",
