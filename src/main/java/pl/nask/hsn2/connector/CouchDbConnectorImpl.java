@@ -129,7 +129,7 @@ public class CouchDbConnectorImpl implements CouchDbConnector {
             }
             LOGGER.debug("Saved: \n{}", document);
             String revision = readRevision(restClient.getInputStream());
-            LOGGER.info("Document saved: id = {} revision = {}", documentId, revision);
+            LOGGER.info("Document saved: id = {} revision = {}", revision, documentId);
             return revision;
         } catch (IOException e) {
             throw new StorageException("Error while connecting to the database", e);
