@@ -1,2 +1,3 @@
 build/reporter /opt/hsn2/
 jsont/* /etc/hsn2/templates
+reporter.conf /etc/hsn2/

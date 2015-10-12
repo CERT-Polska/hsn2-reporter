@@ -8,6 +8,21 @@
   <<.or>>
   "classification":"unknown",
   <<.end>>
+  <<.section thug_detected>>
+  "thug_detected":<<@>>,
+  <<.or>>
+  "thug_detected":false,
+  <<.end>>
+	<<.section thug_active>>
+	"thug_active":<<@>>,
+	<<.or>>
+	"thug_active":false,
+	<<.end>>
+	<<.section thug_error>>
+		"thug_error":<<@>>,
+	<<.or>>
+		"thug_error":"",
+	<<.end>>
   "cuckoo_details":
     {"structure":"list",
     "name":"Analysis details of Cuckoo Service",
@@ -66,14 +81,6 @@
 		"name":"Interaction with the web page",
 		"value":
 		[
-			<<.section thug_error_message>>
-				{
-					"structure":"text",
-					"name":"error message",
-					"value":<<thug_error_message>>
-				}
-			<<.end>>
-			
 			{
 				"structure":"list",
 				"name":"js_contexts",

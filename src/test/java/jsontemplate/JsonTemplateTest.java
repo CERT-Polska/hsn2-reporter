@@ -56,6 +56,30 @@ public class JsonTemplateTest {
 
 		System.out.println(res);
 	}
+	/**
+	 * Test with map.
+	 * 
+	 * @throws Exception Exception.
+	 */
+	@Test
+	public final void doTestTemplateInSubFolder() throws Exception {
+		String strTemplate = loadTemplate("child/template-js-sta");
+		Template t = createTemplate(strTemplate, new ArrayList<JsonAttachment>());
+
+		Map<String, Object> object = new HashMap<String, Object>();
+		object.put("js_classification", "//js_classification");
+		object.put("js_malicious_keywords", true);
+		object.put("js_suspicious_keywords", true);
+		Map<String, Object> jsStaResults = new HashMap<String, Object>();
+
+		jsStaResults.put("id", "id//id");
+		jsStaResults.put("classification", "//classification");
+		object.put("js_sta_results", jsStaResults);
+
+		String res = t.expand(object);
+
+		System.out.println(res);
+	}
 
 	/**
 	 * Test with wrapped message.

@@ -3,19 +3,26 @@
 	"job":<<@|hsn-job-id>>,
 	"service":"thug",
 	"node":<<@|hsn-node-ref>>,
+	<<.section thug_detected>>
+	"thug_detected":<<@>>,
+	<<.or>>
+	"thug_detected":false,
+	<<.end>>
+	<<.section thug_active>>
+	"thug_active":<<@>>,
+	<<.or>>
+	"thug_active":false,
+	<<.end>>
+	<<.section thug_error>>
+		"thug_error":<<@>>,
+	<<.or>>
+		"thug_error":"",
+	<<.end>>
 	"details":{
 		"structure":"list",
 		"name":"Interaction with the web page",
 		"value":
 		[
-			<<.section thug_error_message>>
-				{
-					"structure":"text",
-					"name":"error message",
-					"value":<<thug_error_message>>
-				}
-			<<.end>>
-			
 			{
 				"structure":"list",
 				"name":"js_contexts",
