@@ -31,12 +31,17 @@ import jsontemplate.TemplateCompileOptions;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.nask.hsn2.ResourceException;
 import pl.nask.hsn2.jsontemplate.formatters.JsonAttachment;
 import pl.nask.hsn2.wrappers.ObjectDataReportingWrapper;
 
 public class JsonRendererImpl implements JsonRenderer {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(JsonRendererImpl.class);
+	
     private final TemplateRegistry registry;
 
     public JsonRendererImpl(TemplateRegistry templateRegistry) {
@@ -48,9 +53,15 @@ public class JsonRendererImpl implements JsonRenderer {
         TemplateCompileOptions options = templateCompileOptions();
         List<JsonAttachment> attachments = new ArrayList<JsonAttachment>();
         IProgramBuilder programBuilder = new HsnProgramBuilder(HsnFormatters.getInstance(attachments));
+
         String template = registry.getTemplate(templateName);
+        LOGGER.debug("Template content: {}", template);
+        
         Template t = new Template(template, programBuilder, options);
+        
         String jsonWithAdditionalCommas = t.expand(dataWrapper);
+        LOGGER.debug("jsonWithAdditionalCommas: {}", jsonWithAdditionalCommas);
+
         JSONObject jo;
 		try {
 			jo = (JSONObject) JSONValue.parseWithException(jsonWithAdditionalCommas);
@@ -60,6 +71,7 @@ public class JsonRendererImpl implements JsonRenderer {
 			throw new ResourceException("Error! id: " + dataWrapper.getId(), e);
 		}
         String jsonToString = jo.toString();
+        LOGGER.debug("jsonToString: {}", jsonToString);
         return new JsonRenderingResult(jsonToString, attachments);
     }
 
