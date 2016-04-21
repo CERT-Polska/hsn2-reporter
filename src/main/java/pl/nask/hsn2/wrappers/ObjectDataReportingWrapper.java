@@ -1,8 +1,8 @@
 /*
  * Copyright (c) NASK, NCSC
- * 
+ *
  * This file is part of HoneySpider Network 2.0.
- * 
+ *
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -34,7 +34,7 @@ import pl.nask.hsn2.protobuff.Object.Reference;
 import com.google.protobuf.GeneratedMessage;
 
 public class ObjectDataReportingWrapper extends IncompleteMap<String, Object> implements HsnContext {
-    private static final Logger LOG = LoggerFactory.getLogger(ObjectDataReportingWrapper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ObjectDataReportingWrapper.class);
 
     private final ObjectDataWrapper data;
     private final DataStoreConnector dsConnector;
@@ -51,7 +51,7 @@ public class ObjectDataReportingWrapper extends IncompleteMap<String, Object> im
         this.dsConnector = dsConnector;
     }
 
-    public long getId() {
+    public final long getId() {
         return data.getId();
     }
 
@@ -65,12 +65,12 @@ public class ObjectDataReportingWrapper extends IncompleteMap<String, Object> im
     }
 
     @Override
-    public boolean isEmpty() {
+    public final boolean isEmpty() {
         return size() == 0;
     }
 
     @Override
-    public boolean containsKey(Object key) {
+    public final boolean containsKey(Object key) {
         if (key instanceof String) {
             return data.getAttributeWrapper((String) key) != null;
         } else {
@@ -79,7 +79,7 @@ public class ObjectDataReportingWrapper extends IncompleteMap<String, Object> im
     }
 
     @Override
-    public Object get(Object key) {
+    public final Object get(Object key) {
         if (containsKey(key)) {
             AttributeWrapper attrWrapper = data.getAttributeWrapper((String) key);
             Object value = attrWrapper.getValue();
@@ -119,16 +119,16 @@ public class ObjectDataReportingWrapper extends IncompleteMap<String, Object> im
                 expandedObjectCache.put(key, map);
                 return map;
             } catch (ResourceException e) {
-                LOG.error("Error expanding reference (value=(key:{}, store:{}), key={}, type={}.", new Object[]{ref.getKey(), ref.getStore(), key, msgType });
-                LOG.error("Exception", e);
+                LOGGER.error("Error expanding reference (value=(key:{}, store:{}), key={}, type={}.", new Object[]{ref.getKey(), ref.getStore(), key, msgType });
+                LOGGER.error("Exception", e);
                 return value;
             } catch (StorageException e) {
-                LOG.error("Error expanding reference (value=(key:{}, store:{}), key={}, type={}.", new Object[]{ref.getKey(), ref.getStore(), key, msgType });
-                LOG.error("Exception", e);
+                LOGGER.error("Error expanding reference (value=(key:{}, store:{}), key={}, type={}.", new Object[]{ref.getKey(), ref.getStore(), key, msgType });
+                LOGGER.error("Exception", e);
                 return value;
             } catch (Exception e) {
-                LOG.error("Error expanding reference (value=(key:{}, store:{}), key={}, type={}.", new Object[]{ref.getKey(), ref.getStore(), key, msgType });
-                LOG.error("Exception", e);
+                LOGGER.error("Error expanding reference (value=(key:{}, store:{}), key={}, type={}.", new Object[]{ref.getKey(), ref.getStore(), key, msgType });
+                LOGGER.error("Exception", e);
                 return value;
             }
         } else {
@@ -137,22 +137,22 @@ public class ObjectDataReportingWrapper extends IncompleteMap<String, Object> im
     }
 
     @Override
-    public Set<java.util.Map.Entry<String, Object>> entrySet() {
+    public final Set<java.util.Map.Entry<String, Object>> entrySet() {
         ensureDataMapInitialized();
         return dataMap.entrySet();
     }
 
-    public void setStructType(String fieldName, String msgTypeName) {
-        LOG.debug("Setting proto message type '{}' for '{}'", fieldName, msgTypeName);
+    public final void setStructType(String fieldName, String msgTypeName) {
+        LOGGER.debug("Setting proto message type '{}' for '{}'", fieldName, msgTypeName);
         typeMappings.put(fieldName, msgTypeName);
     }
 
-    public long getJobId() {
+    public final long getJobId() {
        return jobId;
     }
 
     @Override
-    public long getObjectId() {
+    public final long getObjectId() {
         return getId();
     }
 }

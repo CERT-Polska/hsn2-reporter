@@ -1,8 +1,8 @@
 /*
  * Copyright (c) NASK, NCSC
- * 
+ *
  * This file is part of HoneySpider Network 2.0.
- * 
+ *
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -40,11 +40,13 @@ import pl.nask.hsn2.task.TaskFactory;
 
 public final class ReporterService extends ServiceMain{
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReporterService.class);
-	public static void main(final String[] args) throws Exception {
+
+	public static void main(final String[] args) {
 		ReporterService rs = new ReporterService();
 		rs.init(new DefaultDaemonContext(args));
 		rs.start();
 	}
+
 	//TODO: this method probably should be in different place
 	public static CouchDbClient prepareCouchDbClient(String hostname) throws IOException {
 		try {
@@ -57,6 +59,7 @@ public final class ReporterService extends ServiceMain{
 			throw new IOException(e.getMessage(), e);
 		}
 	}
+
 	//TODO: this method probably should be in different place
 	private static void connectAndSetObjectStoreConnectorInFormatters(ReporterCommandLineParams cmd) {
 		try {
@@ -76,7 +79,7 @@ public final class ReporterService extends ServiceMain{
 			LOGGER.debug("CouchDB connect test - OK.");
 		} catch (IOException e) {
 			LOGGER.error("Shutting down {} service.Error connecting CouchDB", cmd.getServiceName());
-			throw new RuntimeException(e);
+			throw new IllegalStateException(e);
 		} finally {
 			if (couchDbClient != null) {
 				couchDbClient.shutdown();
@@ -93,7 +96,7 @@ public final class ReporterService extends ServiceMain{
 	protected Class<? extends TaskFactory> initializeTaskFactory() {
 		checkCouchDB();
 		ReporterCommandLineParams cmd  = (ReporterCommandLineParams)getCommandLineParams();
-		
+
 		TemplateRegistry templateRegistry = new CachingTemplateRegistry(cmd.getUseCacheForTemplates(), cmd.getJsontPath());
 		JsonRenderer jsonRenderer = new JsonRendererImpl(templateRegistry);
 
@@ -103,7 +106,7 @@ public final class ReporterService extends ServiceMain{
 		ReporterTaskFactory.prepereForAllThreads(jsonRenderer, dsConnector, cmd.getDatabaseAddress());
 		return ReporterTaskFactory.class;
 	}
-	
+
 	@Override
 	protected CommandLineParams newCommandLineParams() {
 		return new ReporterCommandLineParams();

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) NASK, NCSC
- * 
+ *
  * This file is part of HoneySpider Network 2.0.
- * 
+ *
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -40,7 +40,7 @@ import pl.nask.hsn2.protobuff.ObjectStore.ObjectResponse;
 import pl.nask.hsn2.wrappers.ProtoMsgMap;
 
 public class RelatedFilesFormatter implements IFormatter {
-	private static final Logger LOG = LoggerFactory.getLogger(RelatedFilesFormatter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RelatedFilesFormatter.class);
 	private final ObjectStoreConnector osConnector;
 
 	public RelatedFilesFormatter(ObjectStoreConnector osConnector) {
@@ -48,7 +48,7 @@ public class RelatedFilesFormatter implements IFormatter {
 	}
 
 	@Override
-	public Object format(Object value) {
+	public final Object format(Object value) {
 		Set<Long> result = new HashSet<Long>();
 		StringBuilder jsResult = new StringBuilder("[");
 
@@ -61,7 +61,7 @@ public class RelatedFilesFormatter implements IFormatter {
 				receiveNoDuplicatedRelFilesId(jobId, objectId, result);
 				receiveDuplicatedRelFilesId(jobId, objectId, result);
 			} catch (StorageException e) {
-				LOG.error("Error in communication with ObjectStore!", e);
+				LOGGER.error("Error in communication with ObjectStore!", e);
 			}
 		}
 		jsResult.append(transformResultToJsResult(result));

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) NASK, NCSC
- * 
+ *
  * This file is part of HoneySpider Network 2.0.
- * 
+ *
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -50,10 +50,10 @@ public class CouchDbConnectorImpl implements CouchDbConnector {
     private final String couchURI;
 
     public CouchDbConnectorImpl(CouchDbClient couchDbClient, DataStoreConnector dsConnector, long jobId, long objectId, String serviceName) {
-        this.client = couchDbClient;
+        client = couchDbClient;
         this.dsConnector = dsConnector;
-        this.couchURI = client.getDBUri().toString();
-        
+        couchURI = client.getDBUri().toString();
+
         if (serviceName.isEmpty()) {
             documentId = String.format("%s:%s", jobId, objectId);
         } else {
@@ -62,7 +62,7 @@ public class CouchDbConnectorImpl implements CouchDbConnector {
     }
 
     @Override
-    public void saveDocument(String document, List<JsonAttachment> attachments) throws ResourceException, StorageException {
+    public final void saveDocument(String document, List<JsonAttachment> attachments) throws ResourceException, StorageException {
 		String revision = doesDocumentExists();
 		if (revision == null) {
 			revision = addDocument(document);
@@ -74,7 +74,7 @@ public class CouchDbConnectorImpl implements CouchDbConnector {
 
 	/**
 	 * Checks if document exists.
-	 * 
+	 *
 	 * @return Revision if it exists or null if it does not exists.
 	 * @throws StorageException Storage exception.
 	 */
@@ -147,8 +147,9 @@ public class CouchDbConnectorImpl implements CouchDbConnector {
     }
 
     private void addAttachments(List<JsonAttachment> attachments, String revision) throws ResourceException, StorageException {
+    	String rev = revision;
     	for (JsonAttachment attachment: attachments) {
-    		revision = saveAttachment(attachment, revision);
+    		rev = saveAttachment(attachment, rev);
     	}
     }
 
@@ -163,11 +164,11 @@ public class CouchDbConnectorImpl implements CouchDbConnector {
 					return res.getRev();
 				} catch (Exception e) {
 					IOUtils.closeQuietly(is);
-					
-					Object[] warnDetails = {attachment.getName(), documentId, revision, (SAVE_ATTACHMENT_REPEAT_COUNT - i), e.getMessage()};
+
+					Object[] warnDetails = {attachment.getName(), documentId, revision, SAVE_ATTACHMENT_REPEAT_COUNT - i, e.getMessage()};
 					LOGGER.warn("Problem with adding attachment:{}, to doc:{} rev:{}. attempts left: {} cause: {}",	warnDetails);
 					LOGGER.debug(e.getMessage(), e);
-					
+
 					if (i < SAVE_ATTACHMENT_REPEAT_COUNT) {
 						try {
 							Thread.sleep(SLEEP_TIME);

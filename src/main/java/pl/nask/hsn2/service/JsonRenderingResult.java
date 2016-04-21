@@ -1,8 +1,8 @@
 /*
  * Copyright (c) NASK, NCSC
- * 
+ *
  * This file is part of HoneySpider Network 2.0.
- * 
+ *
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 import pl.nask.hsn2.jsontemplate.formatters.JsonAttachment;
 
 public class JsonRenderingResult {
-	private static final Logger LOG = LoggerFactory.getLogger(JsonRenderingResult.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(JsonRenderingResult.class);
 	private final String doc;
 	private final List<JsonAttachment> attachments;
 
@@ -38,17 +38,17 @@ public class JsonRenderingResult {
 		attachments = attachmentsList;
 	}
 
-	public List<JsonAttachment> getAttachments() {
+	public final List<JsonAttachment> getAttachments() {
 		return attachments;
 	}
 
-	public String getDocument() {
+	public final String getDocument() {
 		return doc;
 	}
 
-	public void validate() throws ParseException {
+	public final void validate() throws ParseException {
 		String trimedDocument = doc.trim();
-		LOG.debug("Got document to validate: \n{}\n", trimedDocument);
+		LOGGER.debug("Got document to validate: \n{}\n", trimedDocument);
 		JSONValue.parseWithException(trimedDocument);
 	}
 }

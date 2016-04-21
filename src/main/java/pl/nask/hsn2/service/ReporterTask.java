@@ -1,8 +1,8 @@
 /*
  * Copyright (c) NASK, NCSC
- * 
+ *
  * This file is part of HoneySpider Network 2.0.
- * 
+ *
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -32,7 +32,7 @@ import pl.nask.hsn2.task.Task;
 import pl.nask.hsn2.wrappers.ObjectDataReportingWrapper;
 
 public class ReporterTask implements Task {
-	private static final Logger LOG = LoggerFactory.getLogger(ReporterTask.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ReporterTask.class);
 	private final String templateName;
 	private final JsonRenderer jsonRenderer;
 	private final CouchDbConnector couchDbConnector;
@@ -46,20 +46,20 @@ public class ReporterTask implements Task {
 	}
 
 	@Override
-	public boolean takesMuchTime() {
+	public final boolean takesMuchTime() {
 		return false;
 	}
 
 	@Override
-	public void process() throws ParameterException, ResourceException, StorageException, InputDataException {
+	public final void process() throws ParameterException, ResourceException, StorageException, InputDataException {
 		try {
 			// try to render json document
 			JsonRenderingResult result = null;
 			try {
-				LOG.info("Processing object with id={} using template {}", data.getId(), templateName);
+				LOGGER.info("Processing object with id={} using template {}", data.getId(), templateName);
 				result = jsonRenderer.render(data, templateName);
 			} catch (Exception e) {
-				LOG.warn("Error rendering JSON document (will send TaskCompleted anyway...) !", e);
+				LOGGER.warn("Error rendering JSON document (will send TaskCompleted anyway...) !", e);
 				throw new InputDataException("Error rendering JSON document (template: " + templateName + ", msg: "+ e.getMessage()+")", e);
 			}
 
@@ -69,7 +69,7 @@ public class ReporterTask implements Task {
 				couchDbConnector.saveDocument(result.getDocument(), result.getAttachments());
 			} catch (ParseException e) {
 				String msg = "Error processing generated JSON document: " + e.getMessage();
-				LOG.error(msg, e);
+				LOGGER.error(msg, e);
 				throw new ResourceException(msg, e);
 			}
 		} finally {

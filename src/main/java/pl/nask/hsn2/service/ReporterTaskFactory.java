@@ -1,8 +1,8 @@
 /*
  * Copyright (c) NASK, NCSC
- * 
+ *
  * This file is part of HoneySpider Network 2.0.
- * 
+ *
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -45,14 +45,14 @@ public class ReporterTaskFactory implements TaskFactory {
     }
 
     @Override
-    public Task newTask(TaskContext jobContext, ParametersWrapper parameters, ObjectDataWrapper data) throws ParameterException {
+    public final Task newTask(TaskContext jobContext, ParametersWrapper parameters, ObjectDataWrapper data) throws ParameterException {
         long jobId = jobContext.getJobId();
 
         try {
         	//TODO: probably this should be create only for each thread
         	CouchDbClient couchDbClient = ReporterService.prepareCouchDbClient(couchDbServerHostname);
         	CouchDbConnector couchDbConnector = new CouchDbConnectorImpl(couchDbClient, dsConnector, jobId, data.getId(), parameters.get(SERVICE_NAME_PARAM));
-        	
+
 			return new ReporterTask(parameters.get(TEMPLATE_PARAM), new ObjectDataReportingWrapper(jobId, data, dsConnector), jsonRenderer, couchDbConnector);
 		} catch (IOException e) {
 			throw new ParameterException("Could not connect to CouchDB. Is database hostname address valid?", e);

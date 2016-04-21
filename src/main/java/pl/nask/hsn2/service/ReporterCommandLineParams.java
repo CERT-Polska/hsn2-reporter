@@ -1,8 +1,8 @@
 /*
  * Copyright (c) NASK, NCSC
- * 
+ *
  * This file is part of HoneySpider Network 2.0.
- * 
+ *
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -27,7 +27,7 @@ public class ReporterCommandLineParams extends CommandLineParams {
 	private static final OptionNameWrapper JSONT_PATH = new OptionNameWrapper("jsontPath", "jsonTemplatesPath");
 
     @Override
-    public void initOptions() {
+    public final void initOptions() {
         super.initOptions();
         addOption(COUCH_DB_ADDRESS, "url", "The full address of the CouchDB instance");
         addOption(USE_TEMPLATES_CACHE, "flag", "cache template files (true|false)");
@@ -35,7 +35,7 @@ public class ReporterCommandLineParams extends CommandLineParams {
     }
 
     @Override
-    protected void initDefaults() {
+    protected final void initDefaults() {
         super.initDefaults();
         setDefaultValue(USE_TEMPLATES_CACHE, "false");
         setDefaultValue(COUCH_DB_ADDRESS, "http://localhost:5984/hsn/");
@@ -44,16 +44,16 @@ public class ReporterCommandLineParams extends CommandLineParams {
         setDefaultDataStoreAddress("http://localhost:8080/");
     }
 
-    public String getDatabaseAddress() {
+    public final String getDatabaseAddress() {
         return getOptionValue(COUCH_DB_ADDRESS);
     }
 
 
-    public boolean getUseCacheForTemplates() {
+    public final boolean getUseCacheForTemplates() {
         return "true".equalsIgnoreCase(getOptionValue(USE_TEMPLATES_CACHE));
     }
 
-    public String getJsontPath() {
+    public final String getJsontPath() {
 		return getOptionValue(JSONT_PATH);
 	}
 }
