@@ -1,8 +1,8 @@
 /*
  * Copyright (c) NASK, NCSC
- * 
- * This file is part of HoneySpider Network 2.0.
- * 
+ *
+ * This file is part of HoneySpider Network 2.1.
+ *
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -33,7 +33,7 @@ public class JsonAttachment {
         this.key = key;
     }
 
-    public String getName() {
+    public final String getName() {
         return String.format("%s:%s:%s", ctx.getJobId(), store, key);
     }
 
@@ -41,7 +41,7 @@ public class JsonAttachment {
      *
      * @return (Reference.key)
      */
-    public long getKey() {
+    public final long getKey() {
         return key;
     }
 
@@ -49,11 +49,11 @@ public class JsonAttachment {
      *
      * @return (Reference.store)
      */
-    public int getStore() {
+    public final int getStore() {
         return store;
     }
 
-    public long getJobId() {
+    public final long getJobId() {
         return ctx.getJobId();
     }
 

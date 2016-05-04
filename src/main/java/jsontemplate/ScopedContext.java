@@ -1,7 +1,7 @@
 /*
  * Copyright (c) NASK, NCSC
  * 
- * This file is part of HoneySpider Network 2.0.
+ * This file is part of HoneySpider Network 2.1.
  * 
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,11 +24,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 class ScopedContext {
-
-	private ArrayList<Object> stack;
+	private List<Object> stack;
 
 	public ScopedContext(Object dataDictionary) {
 		this.stack = new ArrayList<Object>();
@@ -59,10 +59,11 @@ class ScopedContext {
 	}
 
 	public boolean isEmptyContext(Object cursorPosition) {
-		if (cursorPosition == null)
+		if (cursorPosition == null) {
 			return true;
+		}
 		if (cursorPosition instanceof Boolean) {
-			return ((Boolean) cursorPosition).booleanValue();
+			return !((Boolean) cursorPosition).booleanValue();
 		}
 		if (cursorPosition instanceof Collection) {
 			return ((Collection) cursorPosition).size() == 0;
@@ -86,13 +87,11 @@ class ScopedContext {
 			if (isNonLookupable(context)) {
 				// can't look it up here
 				i -= 1;
-			}
-			else {
+			} else {
 				Object value = lookup(context, name);
 				if (value == null) {
 					i -= 1;
-				}
-				else {
+				} else {
 					return value;
 				}
 			}
@@ -105,8 +104,7 @@ class ScopedContext {
 	private static Object lookup(Object context, String name) {
 		if (context instanceof Map) {
 			return ((Map) context).get(name);
-		}
-		else {
+		} else {
 			// bean?
 			Class<? extends Object> contextClass = context.getClass();
 			Object value = null;
@@ -128,7 +126,9 @@ class ScopedContext {
 				} catch (InvocationTargetException e) {
 					// swallow
 				}
-				if (value != null) return value;
+				if (value != null) {
+					return value;
+				}
 			}
 			// try field access
 			try {
@@ -149,7 +149,9 @@ class ScopedContext {
 	}
 
 	private static boolean isNonLookupable(Object context) {
-		if (context == null) return true;
+		if (context == null) {
+			return true;
+		}
 		Class<? extends Object> contextClass = context.getClass();
 		// primitives are non lookup-able, so are non-Map collections
 		if (Map.class.isAssignableFrom(contextClass)) {
@@ -171,5 +173,4 @@ class ScopedContext {
 	void pushObject(Object item) {
 		this.stack.add(item);
 	}
-
 }

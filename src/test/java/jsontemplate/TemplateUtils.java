@@ -1,7 +1,7 @@
 /*
  * Copyright (c) NASK, NCSC
  * 
- * This file is part of HoneySpider Network 2.0.
+ * This file is part of HoneySpider Network 2.1.
  * 
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,16 @@ import pl.nask.hsn2.jsontemplate.formatters.JsonAttachment;
 import pl.nask.hsn2.service.CachingTemplateRegistry;
 import pl.nask.hsn2.service.TemplateRegistry;
 
-public class TemplateUtils {
+/**
+ * Template utils.
+ */
+public final class TemplateUtils {
+	/**
+	 * Private constructor to prevent instantiation.
+	 */
+	private TemplateUtils() {
+	}
+
     private static TemplateRegistry registry = new CachingTemplateRegistry(true, null);
 
     public static  Template createTemplate(String strTemplate, List<JsonAttachment> attachments) {
@@ -34,7 +43,7 @@ public class TemplateUtils {
         options.setMeta("<<>>");
         options.setDefaultFormatter("json");
         IFormatterResolver moreFormatters = HsnFormatters.getInstance(attachments);
-        IProgramBuilder programBuilder = new HsnProgramBuilder(moreFormatters );
+        IProgramBuilder programBuilder = new HsnProgramBuilder(moreFormatters);
         return new Template(strTemplate, programBuilder, options);
     }
 

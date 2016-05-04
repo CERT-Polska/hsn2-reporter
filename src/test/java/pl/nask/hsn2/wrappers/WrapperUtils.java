@@ -1,7 +1,7 @@
 /*
  * Copyright (c) NASK, NCSC
  * 
- * This file is part of HoneySpider Network 2.0.
+ * This file is part of HoneySpider Network 2.1.
  * 
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,10 +28,16 @@ import pl.nask.hsn2.protobuff.Object.Reference;
 import pl.nask.hsn2.protobuff.Resources.JSContextResults;
 import pl.nask.hsn2.protobuff.Resources.JSContextResults.JSClass;
 
-public class WrapperUtils {
-    static MockedDSConnector dsConnector = new MockedDSConnector();
+public final class WrapperUtils {
+	/**
+	 * Mocked DataStore connector.
+	 */
+    private static final MockedDSConnector DATA_STORE_CONNECTOR = new MockedDSConnector();
     static {
         initDsConnector();
+    }
+
+    private WrapperUtils() {
     }
 
     private static void initDsConnector() {
@@ -40,9 +46,10 @@ public class WrapperUtils {
             .addAllMaliciousKeywords(Arrays.asList("mk1", "mk2"))
             .addAllSuspiciousKeywords(Arrays.asList("sk1", "sk2"))
             .setClassification(JSClass.MALICIOUS)
-            .setWhitelisted(false);
+            .setWhitelisted(false)
+            .setHash("098f6bcd4621d373cade4e832627b4f6");
 
-        dsConnector.addData(1, jscrBuilder.build());
+        DATA_STORE_CONNECTOR.addData(1, jscrBuilder.build());
     }
 
     public static ObjectData prepareSimpleTestMsg() {
@@ -68,10 +75,10 @@ public class WrapperUtils {
     }
 
     public static ObjectDataReportingWrapper prepareSimpleWrapper() {
-        return new ObjectDataReportingWrapper(1, new ObjectDataWrapper(prepareSimpleTestMsg()), dsConnector);
+        return new ObjectDataReportingWrapper(1, new ObjectDataWrapper(prepareSimpleTestMsg()), DATA_STORE_CONNECTOR);
     }
 
     public static ObjectDataReportingWrapper prepareWrapper(ObjectData msg) {
-        return new ObjectDataReportingWrapper(1, new ObjectDataWrapper(msg), dsConnector);
+        return new ObjectDataReportingWrapper(1, new ObjectDataWrapper(msg), DATA_STORE_CONNECTOR);
     }
 }

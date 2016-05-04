@@ -1,7 +1,7 @@
 /*
  * Copyright (c) NASK, NCSC
  * 
- * This file is part of HoneySpider Network 2.0.
+ * This file is part of HoneySpider Network 2.1.
  * 
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,44 +22,95 @@ package pl.nask.hsn2.jsontemplate.formatters;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+/**
+ * JavaScript formatter test.
+ */
 public class JsStringFormatterTest {
-
-	public JsStringFormatter formatter = new JsStringFormatter();
-
+	/**
+	 * Formatter.
+	 */
+	private static final JsStringFormatter FORMATTER = new JsStringFormatter();
+	/**
+	 * Backslash.
+	 */
 	private static final String BACKSLASH = "\\";
+	/**
+	 * Slash.
+	 */
 	private static final String SLASH = "/";
+	/**
+	 * Quotation mark.
+	 */
 	private static final String QUOT = "\"";
+	/**
+	 * Control character.
+	 */
 	private static final String CONTROL = "\b";
+	/**
+	 * Unicode.
+	 */
 	private static final String UNICODE = "\uffff";
+	/**
+	 * Unicode lower case.
+	 */
 	private static final String LOW_UNICODE = "\u0099";
 
+	/**
+	 * Backslash format test.
+	 */
 	@Test
-	public void formatBackSlash() {
-		Assert.assertEquals(formatter.format(BACKSLASH), "\"\\\\\"");
+	public final void formatBackSlash() {
+		Assert.assertEquals(FORMATTER.format(BACKSLASH), "\"\\\\\"");
 	}
 
+	/**
+	 * Slash format test.
+	 */
 	@Test
-	public void formatSlash() {
-		Assert.assertEquals(formatter.format(SLASH), "\"\\/\"");
+	public final void formatSlash() {
+		Assert.assertEquals(FORMATTER.format(SLASH), "\"\\/\"");
 	}
 
+	/**
+	 * Quatation format test.
+	 */
 	@Test
-	public void formatQuot() {
-		Assert.assertEquals(formatter.format(QUOT), "\"\\\"\"");
+	public final void formatQuot() {
+		Assert.assertEquals(FORMATTER.format(QUOT), "\"\\\"\"");
 	}
 
+	/**
+	 * Control character format test.
+	 */
 	@Test
-	public void formatControl() {
-		Assert.assertEquals(formatter.format(CONTROL), "\"\\b\"");
+	public final void formatControl() {
+		Assert.assertEquals(FORMATTER.format(CONTROL), "\"\\b\"");
 	}
 
+	/**
+	 * Unicode format test.
+	 */
 	@Test
-	public void formatUnicode() {
-		Assert.assertEquals(formatter.format(UNICODE), "\"\\\\uffff\"");
+	public final void formatUnicode() {
+		Assert.assertEquals(FORMATTER.format(UNICODE), "\"\\\\uffff\"");
 	}
-	
+
+	/**
+	 * Unicode lower case format test.
+	 */
 	@Test
-	public void formatLowUnicode() {
-		Assert.assertEquals(formatter.format(LOW_UNICODE), "\"\\\\u0099\"");
+	public final void formatLowUnicode() {
+		Assert.assertEquals(FORMATTER.format(LOW_UNICODE), "\"\\\\u0099\"");
+	}
+
+	/**
+	 * Formatter has to return text value. All numbers has to be enclosed within quotation marks.
+	 */
+	@Test
+	public final void formatNumber() {
+		Assert.assertEquals(FORMATTER.format("abc"), "\"abc\"");
+		Assert.assertEquals(FORMATTER.format(11), "\"11\"");
+		Assert.assertEquals(FORMATTER.format(12d), "\"12.0\"");
+		Assert.assertEquals(FORMATTER.format(Long.valueOf(13)), "\"13\"");
 	}
 }

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) NASK, NCSC
- * 
- * This file is part of HoneySpider Network 2.0.
- * 
+ *
+ * This file is part of HoneySpider Network 2.1.
+ *
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -35,29 +35,33 @@ import pl.nask.hsn2.wrappers.ObjectDataWrapper;
 import pl.nask.hsn2.wrappers.ParametersWrapper;
 
 public class ReporterTaskFactory implements TaskFactory {
-    private final static String TEMPLATE_PARAM = "template";
-    private final static String SERVICE_NAME_PARAM = "serviceName";
+    private static final String TEMPLATE_PARAM = "template";
+    private static final String SERVICE_NAME_PARAM = "serviceName";
+    private static DataStoreConnector dsConnector;
+    private static JsonRenderer jsonRenderer;
+    private static String couchDbServerHostname;
 
-    private final DataStoreConnector dsConnector;
-    private final JsonRenderer jsonRenderer;
-    private final String couchDbServerHostname;
-
-    public ReporterTaskFactory(JsonRenderer jsonRenderer, DataStoreConnector dsConnector, String couchDbServerHostname) {
-        this.dsConnector = dsConnector;
-        this.jsonRenderer = jsonRenderer;
-        this.couchDbServerHostname = couchDbServerHostname;
+    public ReporterTaskFactory() {
     }
 
     @Override
-    public Task newTask(TaskContext jobContext, ParametersWrapper parameters, ObjectDataWrapper data) throws ParameterException {
+    public final Task newTask(TaskContext jobContext, ParametersWrapper parameters, ObjectDataWrapper data) throws ParameterException {
         long jobId = jobContext.getJobId();
 
         try {
+        	//TODO: probably this should be create only for each thread
         	CouchDbClient couchDbClient = ReporterService.prepareCouchDbClient(couchDbServerHostname);
-			CouchDbConnector couchDbConnector = new CouchDbConnectorImpl(couchDbClient, dsConnector, jobId, data.getId(), parameters.get(SERVICE_NAME_PARAM));
-			return new ReporterTask(jobContext, parameters.get(TEMPLATE_PARAM), new ObjectDataReportingWrapper(jobId, data, dsConnector), jsonRenderer, couchDbConnector);
+        	CouchDbConnector couchDbConnector = new CouchDbConnectorImpl(couchDbClient, dsConnector, jobId, data.getId(), parameters.get(SERVICE_NAME_PARAM));
+
+			return new ReporterTask(parameters.get(TEMPLATE_PARAM), new ObjectDataReportingWrapper(jobId, data, dsConnector), jsonRenderer, couchDbConnector);
 		} catch (IOException e) {
-			throw new ParameterException("Could not connect to CouchDB. Is database hostname address valid?");
+			throw new ParameterException("Could not connect to CouchDB. Is database hostname address valid?", e);
 		}
     }
+
+	public static void prepereForAllThreads(JsonRenderer jsonRenderer, DataStoreConnector dsConnector, String couchDbServerHostname) {
+		ReporterTaskFactory.dsConnector = dsConnector;
+		ReporterTaskFactory.jsonRenderer = jsonRenderer;
+		ReporterTaskFactory.couchDbServerHostname = couchDbServerHostname;
+	}
 }

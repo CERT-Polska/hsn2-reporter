@@ -1,7 +1,7 @@
 /*
  * Copyright (c) NASK, NCSC
  * 
- * This file is part of HoneySpider Network 2.0.
+ * This file is part of HoneySpider Network 2.1.
  * 
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,10 +25,10 @@ package jsontemplate;
 public interface IFormatter {
 	/**
 	 * Format the given value.
-	 *
+	 * 
 	 * @param value
 	 *            the value to format
 	 * @return the formatted value
 	 */
-	public Object format(Object value);
+	Object format(Object value);
 }

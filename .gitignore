@@ -1,2 +1,12 @@
+# Eclipse files
+/.classpath
+/.project
+/.settings/*
+/target/
+
+# Editor swap files
 *~
 *.swp
+
+test-output/
+coverage-report/

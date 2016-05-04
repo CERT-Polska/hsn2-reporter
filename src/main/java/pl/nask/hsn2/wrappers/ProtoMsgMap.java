@@ -1,7 +1,7 @@
 /*
  * Copyright (c) NASK, NCSC
  * 
- * This file is part of HoneySpider Network 2.0.
+ * This file is part of HoneySpider Network 2.1.
  * 
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ import com.google.protobuf.GeneratedMessage;
  *
  *
  */
-public class ProtoMsgMap extends HashMap<String, Object> implements HsnContext {
+public final class ProtoMsgMap extends HashMap<String, Object> implements HsnContext {
 
     private final long jobId;
     private final long objectId;

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) NASK, NCSC
  * 
- * This file is part of HoneySpider Network 2.0.
+ * This file is part of HoneySpider Network 2.1.
  * 
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,23 +20,27 @@
 package jsontemplate;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 
-public class DefaultFormatters {
+public final class DefaultFormatters {
+	private static Map<String, IFormatter> lookup = new HashMap<String, IFormatter>();
 
-	private static HashMap<String, IFormatter> LOOKUP = new HashMap<String, IFormatter>();
+	private DefaultFormatters() {
+	}
+
 	static {
-		LOOKUP.put("str", new StrFormatter());
-		LOOKUP.put("raw", new RawFormatter());
-		LOOKUP.put("html", new HtmlFormatter());
-		LOOKUP.put("html-attr-value", new HtmlAttrValueFormatter());
-		LOOKUP.put("htmltag", new HtmlTagFormatter());
-		LOOKUP.put("base64", new Base64Formatter());
+		lookup.put("str", new StrFormatter());
+		lookup.put("raw", new RawFormatter());
+		lookup.put("html", new HtmlFormatter());
+		lookup.put("html-attr-value", new HtmlAttrValueFormatter());
+		lookup.put("htmltag", new HtmlTagFormatter());
+		lookup.put("base64", new Base64Formatter());
 	}
 
 	public static IFormatter get(String formatterName) {
-		return LOOKUP.get(formatterName);
+		return lookup.get(formatterName);
 	}
 
 	private static class RawFormatter implements IFormatter {
@@ -48,8 +52,7 @@ public class DefaultFormatters {
 	private static class HtmlFormatter implements IFormatter {
 		public Object format(Object value) {
 			String s = value.toString();
-			return s.replace("&", "&amp;").replace("<", "&lt;").replace(">",
-					"&gt;");
+			return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
 		}
 	}
 
@@ -69,8 +72,7 @@ public class DefaultFormatters {
 	private static class HtmlAttrValueFormatter implements IFormatter {
 		public Object format(Object value) {
 			String s = value.toString();
-			return s.replace("&", "&amp;").replace("<", "&lt;").replace(">",
-					"&gt;").replace("\"", "&quot;").replace("'", "&apos;");
+			return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;").replace("'", "&apos;");
 		}
 	}
 
@@ -79,5 +81,4 @@ public class DefaultFormatters {
 			return value.toString();
 		}
 	};
-
 }

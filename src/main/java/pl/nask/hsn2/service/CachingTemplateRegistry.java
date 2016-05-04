@@ -1,8 +1,8 @@
 /*
  * Copyright (c) NASK, NCSC
- * 
- * This file is part of HoneySpider Network 2.0.
- * 
+ *
+ * This file is part of HoneySpider Network 2.1.
+ *
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -38,17 +38,13 @@ import org.slf4j.LoggerFactory;
 import pl.nask.hsn2.ResourceException;
 
 /**
- * Provides a thread save registry of json templates. A template would be loaded on demand, which would allow the service to be provided with new templates without being stopped.
- *
- *
+ * Provides a thread save registry of json templates. A template would be loaded on demand, which would allow the
+ * service to be provided with new templates without being stopped.
  */
 public class CachingTemplateRegistry implements TemplateRegistry {
-    private final static Logger LOG = LoggerFactory.getLogger(CachingTemplateRegistry.class);
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(CachingTemplateRegistry.class);
     private ConcurrentMap<String, Future<String>> templates = new ConcurrentHashMap<String, Future<String>>();
-
     private final boolean useCache;
-
 	private String jsontPath;
 
     public CachingTemplateRegistry(boolean useCache, String jsontPath) {
@@ -60,7 +56,7 @@ public class CachingTemplateRegistry implements TemplateRegistry {
      * @see pl.nask.hsn2.service.TemplateRegistry#getTemplate(java.lang.String)
      */
     @Override
-    public String getTemplate(final String templateName) throws ResourceException {
+    public final String getTemplate(final String templateName) throws ResourceException {
         if (useCache) {
             return getTemplateUsingCache(templateName);
         } else {
@@ -68,21 +64,19 @@ public class CachingTemplateRegistry implements TemplateRegistry {
         }
     }
 
-    String getTemplateUsingCache(final String templateName) throws ResourceException {
+    final String getTemplateUsingCache(final String templateName) throws ResourceException {
         Future<String> f = templates.get(templateName);
         if (f == null) {
             FutureTask<String> future = new FutureTask<String>(
                  new Callable<String>() {
 
                     @Override
-                    public String call() throws Exception {
+                    public String call() throws ResourceException {
                         return readFileAsString(templateName);
                     }
                  }
             );
-
             f = templates.putIfAbsent(templateName, future);
-
             if (f == null) {
                 f = future;
                 future.run();
@@ -94,20 +88,20 @@ public class CachingTemplateRegistry implements TemplateRegistry {
         } catch (InterruptedException e) {
             throw new ResourceException("Interrupted while waiting for the resource", e);
         } catch (ExecutionException e) {
-            throw new ResourceException("Exception while producing the resource", e.getCause());
+            throw new ResourceException("Exception while producing the resource", e);
         }
     }
 
-    String readFileAsString(String templateName) throws ResourceException {
-        LOG.debug("Reading {}", templateName);
+    final String readFileAsString(String templateName) throws ResourceException {
+        LOGGER.debug("Reading {}", templateName);
         try {
             return readFromFilesystem(templateName);
         } catch (IOException e) {
-        	LOG.warn("Couldn't read {} from the working directory, trying classpath", templateName);
+        	LOGGER.warn("Couldn't read {} from the working directory, trying classpath", templateName);
             try {
                 return readFromClasspath(templateName);
             } catch (IOException e1) {
-                LOG.warn("Couldn't read {} from the classpath", templateName);
+                LOGGER.warn("Couldn't read {} from the classpath", templateName);
                 throw new ResourceException("Couldn't read " + templateName, e1);
             }
         }
@@ -115,12 +109,11 @@ public class CachingTemplateRegistry implements TemplateRegistry {
 
     private String readFromClasspath(String templateName) throws IOException {
         InputStream inputStream = null;
-    	try{
+    	try {
     		inputStream = getClass().getResourceAsStream("/" + templateName);
-    		if(inputStream != null){
+    		if (inputStream != null) {
 	    		return IOUtils.toString(new InputStreamReader(inputStream));
-	    	}
-	    	else{
+	    	} else {
 	    		throw new IOException();
 	    	}
     	} finally {
@@ -131,12 +124,12 @@ public class CachingTemplateRegistry implements TemplateRegistry {
     private String readFromFilesystem(String templateName) throws IOException {
         File template = new File(jsontPath, templateName);
     	InputStream inputStream = null;
-        try{
-	    	if(template.exists()){
+        try {
+	    	if (template.exists()) {
 	    		inputStream = new FileInputStream(template);
 	    		return IOUtils.toString(inputStream);
 	    	}
-	    	LOG.warn("Couldn't read {} from '{}', trying working directory", templateName, jsontPath);
+	    	LOGGER.warn("Couldn't read {} from '{}', trying working directory", templateName, jsontPath);
 	    	inputStream = new FileInputStream(templateName);
 	    	return IOUtils.toString(inputStream);
         } finally {

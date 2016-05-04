@@ -1,7 +1,7 @@
 /*
  * Copyright (c) NASK, NCSC
  * 
- * This file is part of HoneySpider Network 2.0.
+ * This file is part of HoneySpider Network 2.1.
  * 
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,13 +24,14 @@ import jsontemplate.IFormatter;
 import org.json.simple.JSONValue;
 
 public class JsonFormatter implements IFormatter {
-
 	/**
 	 * Very simple formatter which handles HSN2 maps.
+	 *
+	 * @param value Value object.
+	 * @return JSON string.
 	 */
 	@Override
-	public Object format(Object value) {
-		String jsonString = JSONValue.toJSONString(value);
-		return jsonString;
+	public final Object format(final Object value) {
+		return JSONValue.toJSONString(value);
 	}
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) NASK, NCSC
  * 
- * This file is part of HoneySpider Network 2.0.
+ * This file is part of HoneySpider Network 2.1.
  * 
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,15 +19,13 @@
 
 package jsontemplate;
 
+final class TemplateExecutor {
+	private TemplateExecutor() {
+	}
 
-class TemplateExecutor {
-
-	static void execute(StatementList statements,
-			ScopedContext context,
-			ITemplateRenderCallback callback) {
+	static void execute(StatementList statements, ScopedContext context, ITemplateRenderCallback callback) {
 		for (IStatement statement : statements) {
 			statement.execute(context, callback);
 		}
 	}
-
 }

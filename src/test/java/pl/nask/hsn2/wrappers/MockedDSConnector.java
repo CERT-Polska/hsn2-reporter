@@ -1,7 +1,7 @@
 /*
  * Copyright (c) NASK, NCSC
  * 
- * This file is part of HoneySpider Network 2.0.
+ * This file is part of HoneySpider Network 2.1.
  * 
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,8 +26,8 @@ import java.util.Map;
 
 import pl.nask.hsn2.ResourceException;
 import pl.nask.hsn2.StorageException;
+import pl.nask.hsn2.connector.REST.DataResponse;
 import pl.nask.hsn2.connector.REST.DataStoreConnector;
-import pl.nask.hsn2.protobuff.DataStore.DataResponse;
 import pl.nask.hsn2.protobuff.Resources.JSContextResults;
 
 import com.google.protobuf.GeneratedMessage;
@@ -54,7 +54,7 @@ public class MockedDSConnector implements DataStoreConnector {
     }
 
     @Override
-    public DataResponse sendGet(long jobId, long dataId) throws IOException {
+    public InputStream sendGet(long jobId, long dataId) throws IOException {
         throw new UnsupportedOperationException();
     }
 

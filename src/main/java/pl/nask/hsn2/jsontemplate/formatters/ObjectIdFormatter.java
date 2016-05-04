@@ -1,8 +1,8 @@
 /*
  * Copyright (c) NASK, NCSC
- * 
- * This file is part of HoneySpider Network 2.0.
- * 
+ *
+ * This file is part of HoneySpider Network 2.1.
+ *
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -17,16 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.nask.hsn2.connector;
+package pl.nask.hsn2.jsontemplate.formatters;
 
-import pl.nask.hsn2.ResourceException;
-import pl.nask.hsn2.StorageException;
+import jsontemplate.IFormatter;
+import pl.nask.hsn2.wrappers.HsnContext;
 
-import com.google.protobuf.GeneratedMessage;
+public class ObjectIdFormatter implements IFormatter {
 
-public interface DSConnector {
-
-
-    GeneratedMessage getObject(long jobId, long key, String msgType) throws ResourceException, StorageException;
-
+	@Override
+	public final Object format(Object value) {
+		if (value instanceof HsnContext) {
+			HsnContext context = (HsnContext) value;
+			return context.getObjectId();
+		} else {
+			return value;
+		}
+	}
 }

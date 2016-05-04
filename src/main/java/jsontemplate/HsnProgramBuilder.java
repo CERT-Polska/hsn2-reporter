@@ -1,7 +1,7 @@
 /*
  * Copyright (c) NASK, NCSC
  * 
- * This file is part of HoneySpider Network 2.0.
+ * This file is part of HoneySpider Network 2.1.
  * 
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,22 +19,56 @@
 
 package jsontemplate;
 
+public class HsnProgramBuilder implements IProgramBuilder {
+	/**
+	 * Default builder.
+	 */
+	private final DefaultProgramBuilder defaultBuilder;
 
-public class HsnProgramBuilder extends DefaultProgramBuilder {
-    public HsnProgramBuilder(IFormatterResolver moreFormatters) {
-        super(moreFormatters);
-    }
+	/**
+	 * Constructor.
+	 * 
+	 * @param moreFormatters
+	 *            test
+	 */
+	public HsnProgramBuilder(final IFormatterResolver moreFormatters) {
+		this.defaultBuilder = new DefaultProgramBuilder(moreFormatters);
+	}
 
-    @Override
-    public void newSection(boolean repeated, String sectionName,
-            String extraParams) {
-        Section newBlock = new Section(sectionName);
-        if (repeated) {
-            this.currentBlock.append(new RepeatedSectionStatement(newBlock));
-        } else {
-            this.currentBlock.append(new HsnSectionStatement(newBlock, extraParams));
-        }
-        this.stack.add(newBlock);
-        this.currentBlock = newBlock;
-    }
+	@Override
+	public final void newSection(final boolean repeated, final String sectionName, final String extraParams) {
+		Section newBlock = new Section(sectionName);
+		if (repeated) {
+			defaultBuilder.getCurrentBlock().append(new RepeatedSectionStatement(newBlock));
+		} else {
+			defaultBuilder.getCurrentBlock().append(new HsnSectionStatement(newBlock, extraParams));
+		}
+		defaultBuilder.getStack().add(newBlock);
+		defaultBuilder.setCurrentBlock(newBlock);
+	}
+
+	@Override
+	public final Section getRoot() {
+		return defaultBuilder.getRoot();
+	}
+
+	@Override
+	public final void append(final IStatement statement) {
+		defaultBuilder.append(statement);
+	}
+
+	@Override
+	public final void appendSubstitution(final String name, final String... formatters) {
+		defaultBuilder.appendSubstitution(name, formatters);
+	}
+
+	@Override
+	public final void newClause(final String token) {
+		defaultBuilder.newClause(token);
+	}
+
+	@Override
+	public final void endSection() {
+		defaultBuilder.endSection();
+	}
 }

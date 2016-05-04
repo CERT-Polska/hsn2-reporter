@@ -1,7 +1,7 @@
 /*
  * Copyright (c) NASK, NCSC
  * 
- * This file is part of HoneySpider Network 2.0.
+ * This file is part of HoneySpider Network 2.1.
  * 
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,16 +21,16 @@ package jsontemplate;
 
 /**
  * An interface for objects that can get an {@link IFormatter} for a given name.
- *
+ * 
  */
 public interface IFormatterResolver {
 	/**
 	 * Get a formatter with the given name.
-	 *
+	 * 
 	 * @param formatterName
 	 *            the name of the formatter.
-	 * @return the appropriate IFormatter implementation, or null if the
-	 *         implementation cannot be found using this resolver.
+	 * @return the appropriate IFormatter implementation, or null if the implementation cannot be found using this
+	 *         resolver.
 	 */
-	public IFormatter getFormatter(String formatterName);
+	IFormatter getFormatter(String formatterName);
 }

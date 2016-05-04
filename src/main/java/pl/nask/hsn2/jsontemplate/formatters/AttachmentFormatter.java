@@ -1,8 +1,8 @@
 /*
  * Copyright (c) NASK, NCSC
- * 
- * This file is part of HoneySpider Network 2.0.
- * 
+ *
+ * This file is part of HoneySpider Network 2.1.
+ *
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -28,15 +28,14 @@ import pl.nask.hsn2.wrappers.ProtoMsgMap;
 import com.google.protobuf.GeneratedMessage;
 
 public class AttachmentFormatter implements IFormatter {
-
     private final List<JsonAttachment> attachments;
 
-    public AttachmentFormatter(List<JsonAttachment> attachments) {
-        this.attachments = attachments;
+    public AttachmentFormatter(List<JsonAttachment> attachmentsList) {
+        attachments = attachmentsList;
     }
 
     @Override
-    public Object format(Object value) {
+    public final Object format(Object value) {
         if (value instanceof ProtoMsgMap) {
             ProtoMsgMap protoMap = (ProtoMsgMap) value;
             GeneratedMessage msg = protoMap.getOriginalMsg();
@@ -47,8 +46,6 @@ public class AttachmentFormatter implements IFormatter {
                 return "\"" + att.getName() + "\"";
             }
         }
-
         return value;
     }
-
 }

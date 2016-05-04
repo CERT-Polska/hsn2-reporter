@@ -1,8 +1,8 @@
 /*
  * Copyright (c) NASK, NCSC
- * 
- * This file is part of HoneySpider Network 2.0.
- * 
+ *
+ * This file is part of HoneySpider Network 2.1.
+ *
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -25,13 +25,12 @@ import pl.nask.hsn2.wrappers.HsnContext;
 public class JobIdFormatter implements IFormatter {
 
 	@Override
-	public Object format(Object value) {
+	public final Object format(Object value) {
 		if (value instanceof HsnContext) {
             HsnContext context = (HsnContext) value;
-            return "\"" + context.getJobId() + "\"";
+            return context.getJobId();
         } else {
             return value;
         }
 	}
-
 }

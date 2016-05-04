@@ -1,8 +1,8 @@
 /*
  * Copyright (c) NASK, NCSC
- * 
- * This file is part of HoneySpider Network 2.0.
- * 
+ *
+ * This file is part of HoneySpider Network 2.1.
+ *
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -26,13 +26,21 @@ import org.json.simple.JSONValue;
 public class JsStringFormatter implements IFormatter {
 
 	@Override
-	public Object format(Object value) {
+	public final Object format(Object value) {
 		String jsonString = JSONValue.toJSONString(value);
-		String escaped = escapeSlashAndUnicode(jsonString);
-		return escaped;
+		String result = escapeSlashAndUnicode(jsonString);
+
+		// If value is Number result will be JSON number, which means no quotation marks. Return value has to be JSON
+		// text, so it have to be enclosed within quotation marks.
+		if (!result.startsWith("\"")) {
+			result = "\"" + result + "\"";
+		}
+
+		return result;
 	}
 
-	// This code was taken from org.apache.commons.jexl2.parser.StringParser (org.apache.commons-jexl:2.0.1) and modified
+	// This code was taken from org.apache.commons.jexl2.parser.StringParser (org.apache.commons-jexl:2.0.1) and
+	// modified
 
 	/** The length of an escaped unicode sequence. */
 	private static final int UCHAR_LEN = 4;
@@ -50,17 +58,16 @@ public class JsStringFormatter implements IFormatter {
 		for (int i = 0; i < length; ++i) {
 			char c = str.charAt(i);
 			if (c < LAST_ASCII) {
-				if(c == '\\'){
+				if (c == '\\') {
 					int next = i + 1;
-					if(next < length && str.charAt(next) == 'u'){
+					if (next < length && str.charAt(next) == 'u') {
 						strb.append('\\');
 						strb.append('\\');
 						continue;
 					}
 				}
 				strb.append(c);
-			} 
-			else {
+			} else {
 				strb.append('\\');
 				strb.append('\\');
 				strb.append('u');

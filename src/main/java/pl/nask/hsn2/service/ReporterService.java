@@ -1,8 +1,8 @@
 /*
  * Copyright (c) NASK, NCSC
- * 
- * This file is part of HoneySpider Network 2.0.
- * 
+ *
+ * This file is part of HoneySpider Network 2.1.
+ *
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -30,31 +30,72 @@ import org.lightcouch.CouchDbException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.nask.hsn2.GenericService;
+import pl.nask.hsn2.CommandLineParams;
+import pl.nask.hsn2.ServiceMain;
 import pl.nask.hsn2.connector.BusException;
 import pl.nask.hsn2.connector.AMQP.ObjectStoreConnectorImpl;
 import pl.nask.hsn2.connector.REST.DataStoreConnector;
 import pl.nask.hsn2.connector.REST.DataStoreConnectorImpl;
+import pl.nask.hsn2.task.TaskFactory;
 
-public final class ReporterService {
+public final class ReporterService extends ServiceMain{
+	private static final Logger LOGGER = LoggerFactory.getLogger(ReporterService.class);
 
-	private final static Logger LOG = LoggerFactory.getLogger(ReporterService.class);
+	public static void main(final String[] args) {
+		ReporterService rs = new ReporterService();
+		rs.init(new DefaultDaemonContext(args));
+		rs.start();
+	}
 
-	public static void main(String[] args) throws InterruptedException {
-		ReporterCommandLineParams cmd = parseArguments(args);
+	//TODO: this method probably should be in different place
+	public static CouchDbClient prepareCouchDbClient(String hostname) throws IOException {
+		try {
+			URL url = new URL(hostname);
+			return new CouchDbClient(url.getPath(), true, url.getProtocol(), url.getHost(), url.getPort(), null, null);
+		} catch (MalformedURLException e) {
+			throw new IllegalArgumentException("Malformed URL: " + hostname, e);
+		} catch (CouchDbException e) {
+			LOGGER.error("Cannot connect do CouchDB server: {}", hostname);
+			throw new IOException(e.getMessage(), e);
+		}
+	}
+
+	//TODO: this method probably should be in different place
+	private static void connectAndSetObjectStoreConnectorInFormatters(ReporterCommandLineParams cmd) {
+		try {
+			HsnFormatters.setOsConnector(new ObjectStoreConnectorImpl(cmd.getConnectorAddress(), cmd.getObjectStoreQueueName()));
+		} catch (BusException e) {
+			LOGGER.error("Error in connection with ObjectStore.", e);
+		}
+	}
+
+	//TODO: there should be one client for couch - delete this method
+	private void checkCouchDB() {
+		ReporterCommandLineParams cmd  = (ReporterCommandLineParams)getCommandLineParams();
 
 		CouchDbClient couchDbClient = null;
 		try {
 			couchDbClient = prepareCouchDbClient(cmd.getDatabaseAddress());
+			LOGGER.debug("CouchDB connect test - OK.");
 		} catch (IOException e) {
-			LOG.error("Shutting down {} service",cmd.getServiceName());
-			System.exit(1);
+			LOGGER.error("Shutting down {} service.Error connecting CouchDB", cmd.getServiceName());
+			throw new IllegalStateException(e);
 		} finally {
 			if (couchDbClient != null) {
 				couchDbClient.shutdown();
 				couchDbClient = null;
 			}
 		}
+	}
+
+	@Override
+	protected void prepareService() {
+	}
+
+	@Override
+	protected Class<? extends TaskFactory> initializeTaskFactory() {
+		checkCouchDB();
+		ReporterCommandLineParams cmd  = (ReporterCommandLineParams)getCommandLineParams();
 
 		TemplateRegistry templateRegistry = new CachingTemplateRegistry(cmd.getUseCacheForTemplates(), cmd.getJsontPath());
 		JsonRenderer jsonRenderer = new JsonRendererImpl(templateRegistry);
@@ -62,39 +103,12 @@ public final class ReporterService {
 		DataStoreConnector dsConnector = new DataStoreConnectorImpl(cmd.getFormattedDataStoreAddress());
 
 		connectAndSetObjectStoreConnectorInFormatters(cmd);
-
-
-		GenericService service = new GenericService(new ReporterTaskFactory(jsonRenderer, dsConnector, cmd.getDatabaseAddress()), cmd.getMaxThreads(), cmd.getRbtCommonExchangeName());
-		cmd.applyArguments(service);
-
-		service.run();
+		ReporterTaskFactory.prepereForAllThreads(jsonRenderer, dsConnector, cmd.getDatabaseAddress());
+		return ReporterTaskFactory.class;
 	}
 
-	public static CouchDbClient prepareCouchDbClient(String hostname) throws IOException {
-		try {
-			URL url = new URL(hostname);
-			CouchDbClient client = new CouchDbClient(url.getPath(), true, url.getProtocol(), url.getHost(), url.getPort(), null, null);
-			return client;
-		} catch (MalformedURLException e) {
-			throw new IllegalArgumentException("Malformed URL: " + hostname, e);
-		} catch (CouchDbException e) {
-			LOG.error("Cannot connect do CouchDB server: {}", hostname);
-			throw new IOException(e.getMessage());
-		}
-	}
-
-	private static void connectAndSetObjectStoreConnectorInFormatters(ReporterCommandLineParams cmd){
-		try {
-			HsnFormatters.setOsConnector(new ObjectStoreConnectorImpl(cmd.getConnectorAddress(), cmd.getObjectStoreQueueName()));
-		} catch (BusException e) {
-			LOG.error("Error in connection with ObjectStore.",e);
-		}
-	}
-
-	private static ReporterCommandLineParams parseArguments(String[] args) {
-		ReporterCommandLineParams params = new ReporterCommandLineParams();
-		params.parseParams(args);
-
-		return params;
+	@Override
+	protected CommandLineParams newCommandLineParams() {
+		return new ReporterCommandLineParams();
 	}
 }

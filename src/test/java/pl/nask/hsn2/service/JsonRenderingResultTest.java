@@ -1,7 +1,7 @@
 /*
  * Copyright (c) NASK, NCSC
  * 
- * This file is part of HoneySpider Network 2.0.
+ * This file is part of HoneySpider Network 2.1.
  * 
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,65 +41,89 @@ import com.rabbitmq.tools.json.JSONReader;
 import com.rabbitmq.tools.json.JSONWriter;
 
 /**
- * Check JSON parsers / seializers to find the one, which will handle (remove) additional ',' from the end of the json list.
- * This suite contains test for JSONObject (which does the job) to make sure, that none of possible library updates breake this functionality.
- * The suite also contains tests for other JSON parsers, which are available through dependencies, to check if any of the future updates makes them usable for this purpose. 
- *
+ * Check JSON parsers / seializers to find the one, which will handle (remove) additional ',' from the end of the json
+ * list. This suite contains test for JSONObject (which does the job) to make sure, that none of possible library
+ * updates breake this functionality. The suite also contains tests for other JSON parsers, which are available through
+ * dependencies, to check if any of the future updates makes them usable for this purpose.
+ * 
  */
 public class JsonRenderingResultTest {
-
+	/**
+	 * Results.
+	 */
 	private JsonRenderingResult fullJsonResult;
+	/**
+	 * JSON string.
+	 */
 	private String simpleJson;
 
+	/**
+	 * Before test initialization.
+	 * 
+	 * @throws IOException
+	 *             IO exception.
+	 */
 	@BeforeTest
-	public void beforeTest() throws IOException{
+	public final void beforeTest() throws IOException {
 		Reader reader = new FileReader("src/test/resources/correctWebclientTemplate");
 		fullJsonResult = new JsonRenderingResult(IOUtils.toString(reader), new ArrayList<JsonAttachment>());
-		
+
 		reader = new FileReader("src/test/resources/simpleJsonWithAdditionalComma");
 		simpleJson = IOUtils.toString(reader);
 	}
-	
+
+	/**
+	 * Performs validation.
+	 */
 	@Test
-	public void validate() {
+	public final void validate() {
 		try {
 			fullJsonResult.validate();
 		} catch (ParseException e) {
 			Assert.fail(e.getMessage());
 		}
 	}
-	
+
 	/**
-	 * this parser/serializer does not handle addiditonal comas
+	 * This parser/serializer does not handle addiditonal comas.
 	 */
-	@Test(expectedExceptions=ClassCastException.class)
-	public void rabbitSerialization(){
+	@Test(expectedExceptions = ClassCastException.class)
+	public final void rabbitSerialization() {
 		Object o = new JSONReader().read(simpleJson);
 		new JSONWriter().write(o);
 	}
-	
+
 	/**
-	 * this parser/serializer does not handle addiditonal comas
+	 * This parser/serializer does not handle addiditonal comas.
 	 */
-	@Test(expectedExceptions=JsonSyntaxException.class)
-	public void gsonSerialization(){
+	@Test(expectedExceptions = JsonSyntaxException.class)
+	public final void gsonSerialization() {
 		JsonParser parser = new JsonParser();
 		JsonElement element = parser.parse(simpleJson);
 		System.out.println(element.getAsString());
-		
-	}
-	
-	/**
-	 * the only implementation, which actualy does the job
-	 */
-	@Test
-	public void jsonUtilsSerialization(){
-		JSONObject jo = (JSONObject) JSONValue.parse(simpleJson);
-		String validJson = jo.toString();
-		Assert.assertEquals(countChars(validJson, ','), 2);		
+
 	}
 
-	private int countChars(String s, char ch) {
+	/**
+	 * The only implementation, which actualy does the job.
+	 */
+	@Test
+	public final void jsonUtilsSerialization() {
+		JSONObject jo = (JSONObject) JSONValue.parse(simpleJson);
+		String validJson = jo.toString();
+		Assert.assertEquals(countChars(validJson, ','), 2);
+	}
+
+	/**
+	 * Counts character occurrences in a string.
+	 * 
+	 * @param s
+	 *            Input string.
+	 * @param ch
+	 *            Char to count.
+	 * @return Number of character occurrences.
+	 */
+	private int countChars(final String s, final char ch) {
 		int counter = 0;
 		for (int i = 0; i < s.length(); i++) {
 			if (s.charAt(i) == ch) {

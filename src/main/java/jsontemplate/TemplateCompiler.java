@@ -1,7 +1,7 @@
 /*
  * Copyright (c) NASK, NCSC
  * 
- * This file is part of HoneySpider Network 2.0.
+ * This file is part of HoneySpider Network 2.1.
  * 
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,36 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class TemplateCompiler {
+/**
+ * Template compiler.
+ */
+final class TemplateCompiler {
+	/**
+	 * Section regex pattern.
+	 */
+	private static final Pattern SECTION_RE = Pattern.compile("(repeated)?\\s*(section)\\s+(\\S+)(.*)");
+	/**
+	 * Regex group 3.
+	 */
+	private static final int GROUP_THREE = 3;
+	/**
+	 * Regex group 4.
+	 */
+	private static final int GROUP_FOUR = 4;
+	/**
+	 * Initial size of token pattern cache.
+	 */
+	private static final int MAP_INIT_SIZE = 20;
+	/**
+	 * Token pattern cache map.
+	 */
+	private static ConcurrentHashMap<String, Pattern> tokenPatternCache = new ConcurrentHashMap<String, Pattern>(MAP_INIT_SIZE);
+
+	/**
+	 * Private constructor to prevent instantiation.
+	 */
+	private TemplateCompiler() {
+	}
 
 	/**
 	 * Compile the template string, calling methods on the 'program builder'.
@@ -41,24 +70,30 @@ class TemplateCompiler {
 	 *            compilation options.
 	 * @return The compiled program (obtained from the builder)
 	 */
-	static Section compile(String template, IProgramBuilder builder,
-			TemplateCompileOptions options) {
+	static Section compile(String template, IProgramBuilder builder, TemplateCompileOptions options) {
+		IProgramBuilder builderSafe;
+		TemplateCompileOptions optionsSafe;
 		if (options == null) {
-			options = new TemplateCompileOptions();
+			optionsSafe = new TemplateCompileOptions();
+		} else {
+			optionsSafe = options;
 		}
 		if (builder == null) {
-			builder = new DefaultProgramBuilder(options.getMoreFormatters());
+			builderSafe = new DefaultProgramBuilder(optionsSafe.getMoreFormatters());
+		} else {
+			builderSafe = builder;
 		}
-		String[] metas = splitMeta(options.getMeta());
+
+		String[] metas = splitMeta(optionsSafe.getMeta());
 		String metaLeft = metas[0];
 		String metaRight = metas[1];
-		char formatChar = options.getFormatChar();
+		char formatChar = optionsSafe.getFormatChar();
 		if (formatChar != '|' && formatChar != ':') {
 			throw new ConfigurationError(String.format(
 					"Only format characters : and | are accepted (got %s)", ""
 							+ formatChar));
 		}
-		String defaultFormatter = options.getDefaultFormatter();
+		String defaultFormatter = optionsSafe.getDefaultFormatter();
 
 		Pattern tokenRe = makeTokenRegex(metaLeft, metaRight);
 		// cache the lengths
@@ -83,7 +118,7 @@ class TemplateCompiler {
 				// PROCESS TEXT
 				String token = template.substring(lastMatchIndex, matcher
 						.start());
-				builder.append(new LiteralStatement(token));
+				builderSafe.append(new LiteralStatement(token));
 			}
 			lastMatchIndex = matcher.end();
 
@@ -99,29 +134,30 @@ class TemplateCompiler {
 			token = token.substring(metaLeftLength, token.length()
 					- metaRightLength);
 
-			if (token.startsWith("#"))
-				continue; // comment
+			if (token.startsWith("#")) {
+				continue;
+			}
 
 			if (token.startsWith(".")) {
 				token = token.substring(1);
 				String literal = keywordLookup.get(token);
 				if (literal != null) {
-					builder.append(new LiteralStatement(literal));
+					builderSafe.append(new LiteralStatement(literal));
 					continue;
 				}
 
 				Matcher sectionMatcher = SECTION_RE.matcher(token);
 				if (sectionMatcher.find()) {
 					String repeated = sectionMatcher.group(1);
-					String sectionName = sectionMatcher.group(3);
-					String extraParams = sectionMatcher.group(4);
-					builder.newSection(repeated != null, sectionName, extraParams);
+					String sectionName = sectionMatcher.group(GROUP_THREE);
+					String extraParams = sectionMatcher.group(GROUP_FOUR);
+					builderSafe.newSection(repeated != null, sectionName, extraParams);
 					balanceCounter += 1;
 					continue;
 				}
 
 				if (token.equals("or") || token.equals("alternates with")) {
-					builder.newClause(token);
+					builderSafe.newClause(token);
 				}
 
 				if (token.equals("end")) {
@@ -133,7 +169,7 @@ class TemplateCompiler {
 												"Got too many %send%s statements. You may have mistyped an earlier 'section' or 'repeated section' directive.",
 												metaLeft, metaRight));
 					}
-					builder.endSection();
+					builderSafe.endSection();
 				}
 				continue;
 			}
@@ -154,27 +190,21 @@ class TemplateCompiler {
 				formatters = new String[parts.length - 1];
 				System.arraycopy(parts, 1, formatters, 0, formatters.length);
 			}
-			builder.appendSubstitution(name, formatters);
-			if (hadNewline)
-				builder.append(new LiteralStatement("\n"));
+			builderSafe.appendSubstitution(name, formatters);
+			if (hadNewline) {
+				builderSafe.append(new LiteralStatement("\n"));
+			}
 		}
 		// TRAILING TEXT
-		builder
-				.append(new LiteralStatement(template.substring(lastMatchIndex)));
+		builderSafe.append(new LiteralStatement(template.substring(lastMatchIndex)));
 
 		if (balanceCounter != 0) {
 			throw new TemplateSyntaxError(String.format(
 					"Got too few %send%s statements.", metaLeft, metaRight));
 		}
 
-		return builder.getRoot();
+		return builderSafe.getRoot();
 	}
-
-	private static Pattern SECTION_RE = Pattern
-			.compile("(repeated)?\\s*(section)\\s+(\\S+)(.*)");
-
-	private static ConcurrentHashMap<String, Pattern> tokenPatternCache = new ConcurrentHashMap<String, Pattern>(
-			20);
 
 	private static Pattern makeTokenRegex(String metaLeft, String metaRight) {
 		String cacheKey = metaLeft + "!" + metaRight;
@@ -189,9 +219,8 @@ class TemplateCompiler {
 
 	private static String[] splitMeta(String meta) {
 		int n = meta.length();
-		if (n % 2 == 1) {
-			throw new ConfigurationError(String.format(
-					"%s has an odd number of characters", meta));
+		if (n % 2 != 0) {
+			throw new ConfigurationError(String.format("%s has an odd number of characters", meta));
 		}
 		return new String[] { meta.substring(0, n / 2), meta.substring(n / 2) };
 	}

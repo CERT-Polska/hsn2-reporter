@@ -1,7 +1,7 @@
 /*
  * Copyright (c) NASK, NCSC
  * 
- * This file is part of HoneySpider Network 2.0.
+ * This file is part of HoneySpider Network 2.1.
  * 
  * This is a free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,11 +20,10 @@
 package jsontemplate;
 
 class SectionStatement implements IStatement {
-
 	private Section block;
 
-	public SectionStatement(Section block) {
-		this.block = block;
+	public SectionStatement(Section sectionBlock) {
+		block = sectionBlock;
 	}
 
 	public void execute(ScopedContext context, ITemplateRenderCallback callback) {
@@ -41,5 +40,4 @@ class SectionStatement implements IStatement {
 
 		context.pop();
 	}
-
 }

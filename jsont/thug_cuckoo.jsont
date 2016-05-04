@@ -1,0 +1,149 @@
+{
+  "type":"analysis",
+  "job":<<@|hsn-job-id>>,
+  "service":"cuckoo",
+  "node":<<@|hsn-node-ref>>,
+  <<.section cuckoo_classification>>
+  "classification":<<@>>,
+  <<.or>>
+  "classification":"unknown",
+  <<.end>>
+  <<.section thug_detected>>
+  "thug_detected":<<@>>,
+  <<.or>>
+  "thug_detected":false,
+  <<.end>>
+	<<.section thug_active>>
+	"thug_active":<<@>>,
+	<<.or>>
+	"thug_active":false,
+	<<.end>>
+	<<.section thug_error>>
+		"thug_error":<<@>>,
+	<<.or>>
+		"thug_error":"",
+	<<.end>>
+  "cuckoo_details":
+    {"structure":"list",
+    "name":"Analysis details of Cuckoo Service",
+    "value":
+    [
+      {
+        "structure":"integer",
+        "name":"Processing started",
+        "value":<<cuckoo_time_start>>
+      },
+      {
+        "structure":"integer",
+        "name":"Processing finished",
+        "value":<<cuckoo_time_stop>>
+      },
+      <<.section cuckoo_pcap>>
+      {
+        "structure":"attachment",
+        "name":"PCAP file",
+        "value":<<@|hsn-attachment>>
+      },
+      <<.end>>
+      <<.section cuckoo_report_html>>
+      {
+        "structure":"attachment",
+        "name":"HTML Report",
+        "value":<<@|hsn-attachment>>
+      },
+      <<.end>>
+      <<.section cuckoo_report_json>>
+      {
+        "structure":"attachment",
+        "name":"JSON report",
+        "value":<<@|hsn-attachment>>
+      },
+      <<.end>>
+      <<.section cuckoo_screenshots>>
+      {
+        "structure":"attachment",
+        "name":"Screenshots from Cuckoo",
+        "value":<<@|hsn-attachment>>
+      },
+      <<.end>>
+      <<.section cuckoo_classification_reason>>
+      {
+        "structure":"text",
+        "name":"Reason for classification",
+        "value":<<@|js-string>>
+      },
+      <<.end>>
+    ]
+    }
+    "thug_details":
+    {
+		"structure":"list",
+		"name":"Interaction with the web page",
+		"value":
+		[
+			{
+				"structure":"list",
+				"name":"js_contexts",
+				"value":
+				[
+					<<.section js_context_list JSContextList>>
+					<<.repeated section contexts>>
+					{
+						"structure":"text",
+						"name":"context <<id|str>>",
+						"value":"<<source|html-attr-value>>"
+					}
+					<<.alternates with>>,
+					<<.end>>
+					<<.end>>
+				]
+			},
+			{
+				"structure":"list",
+				"name":"thug_behaviors",
+				"value":
+				[
+					<<.section thug_behaviors BehaviorsList>>
+					<<.repeated section behavior>>
+					{
+						"structure":"list",
+						"name":"behavior",
+						"value":
+						[
+							<<.section description_text>>{
+								"structure":"text",
+								"name":"description",
+								"value":<<@>>
+							},
+							<<.end>>
+							<<.section discovery_method>>{
+								"structure":"text",
+								"name":"discovery method",
+								"value":<<@>>
+							}
+							<<.end>>
+						]
+					}
+					<<.alternates with>>,
+					<<.end>>
+					<<.end>>
+				]
+			}
+			<<.section thug_analysis_file>>
+			{
+				"structure":"attachment",
+				"name":"analysis file",
+				"value":<<@|hsn-attachment>>
+			},
+			<<.end>>
+			<<.section thug_analysis_zip>>
+			{
+				"structure":"attachment",
+				"name":"analysis zip",
+				"value":<<@|hsn-attachment>>
+			},
+			<<.end>>
+		]
+	}
+}
+
